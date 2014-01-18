@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 import os
 import sys
-import glob
 
 if __name__ == "__main__":
     env_dir = 'envdir'
-    env_vars = glob.glob(os.path.join(env_dir, '*'))
-    for env_var in env_vars:
-        with open(env_var, 'r') as env_var_file:
-            os.environ.setdefault(env_var.split(os.sep)[-1],
-                                  env_var_file.read().strip())
+    env_var_names = [ x for x in os.listdir(env_dir) if not x.startswith('_') ]
+    for env_var_name in env_var_names:
+        env_file_path = os.path.join(env_dir, env_var_name)
+        with open(env_file_path, 'r') as env_file:
+            env_var_value = env_file.read().strip()
+            os.environ.setdefault(env_var_name, env_var_value)
 
     from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)
