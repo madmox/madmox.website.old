@@ -18,6 +18,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
 DEBUG = (os.environ.get('DJANGO_DEBUG') != None)
 TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = os.environ['DJANGO_ALLOWED_HOSTS'].split()
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 # Application definition
 
