@@ -1,3 +1,4 @@
 syntax: glob
 *.pyc
 __pycache__
+django_site/envdir/*

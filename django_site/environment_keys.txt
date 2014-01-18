@@ -1,5 +1,6 @@
 # Defines environment keys required by this django install
 
+DJANGO_SETTINGS_MODULE
 DJANGO_SECRET_KEY
 DJANGO_ALLOWED_HOSTS (space-separated list)
 DJANGO_DATABASE_NAME
