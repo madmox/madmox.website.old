@@ -1,0 +1,28 @@
+{% load staticfiles %}<!DOCTYPE html>
+<html lang="fr-FR">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="keywords" content="{% block keywords %}{% endblock %}">
+        <meta name="description" content="{% block description %}{% endblock %}">
+        <link href="{% static 'css/main.css' %}" media="all" rel="stylesheet" type="text/css">
+        <script src="{% static 'js/jquery-2.0.3.min.js' %}"></script>
+        {% block additional_page_head %}{% endblock %}
+    </head>
+    <body>
+        <div id="header">
+            <div id="header-title">www.madmox.fr</div>
+            <ul id="header-nav">
+                <li class="{% block nav_about %}{% endblock %}"><a href="{% url 'about:index' %}">A PROPOS</a></li>
+            </ul>
+        </div>
+        <div id="sidebar">
+            <h3>Navigation</h3>
+            <ul id="sidebar-nav">{% block sidebar_nav %}{% endblock %}</ul>
+        </div><!--
+        --><div id="content">{% block content %}{% endblock %}</div>
+        <div id="footer">
+            Copyright © 2013-{% now "Y" %} Maxime ROSSINI
+        </div>
+    </body>
+</html>
