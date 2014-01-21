@@ -11,3 +11,5 @@
 <li class="{% block nav_about_index %}{% endblock %}"><a href="{% url 'about:index' %}">A propos</a></li>
 <li class="{% block nav_about_cv %}{% endblock %}"><a href="{% url 'about:cv' %}">Curriculum Vitae</a></li>
 {% endblock %}
+
+{% block content %}<div id="content-about">{% block content_about %}{% endblock %}</div>{% endblock %}

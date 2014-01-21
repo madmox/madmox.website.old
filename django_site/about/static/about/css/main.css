@@ -1,0 +1,86 @@
+/** 'about' styles **/
+#content-about {
+    margin: 1em;
+    padding: 1em;
+    border: solid #6666FF 3px;
+    border-radius: 10px;
+}
+
+#cv-contact {
+    width: 100%;
+    position: relative;
+}
+
+#cv-contact-primary {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#cv-contact-secondary {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    vertical-align: top;
+    text-align: right;
+}
+
+h2 {
+    color: #6666FF;
+    border-bottom: 1px solid #6666FF;
+}
+
+h2.cv-section-title {
+    text-transform: uppercase;
+}
+
+.cv-section-table ul {
+    margin: 0;
+    padding-left: 1em;
+}
+
+.cv-section-content ul {
+    margin: 0;
+    padding-left: 1em;
+}
+
+.cv-section-content li {
+    list-style-type: none;
+    font-size: 0.9em;
+}
+
+.cv-section-content-group:not(:last-child){
+    padding-bottom: 1em;
+}
+
+.cv-section-table-date {
+    vertical-align: top;
+    font-style: italic;
+    width: 8em;
+    padding-right: 1em;
+}
+
+.cv-section-table-data {
+    vertical-align: middle;
+    padding-bottom: 1em;
+}
+
+.cv-section-table-data-period {
+    font-style: italic;
+    text-decoration: underline;
+}
+
+#cv-profile-photo {
+    margin-right: 0.5em;
+}
+
+.cv-logo {
+    display: block;
+    margin: 1em auto;
+}
+
+#cv-references {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 1em;
+}

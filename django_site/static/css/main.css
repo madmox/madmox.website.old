@@ -1,11 +1,12 @@
+/** Base styles **/
 body {
     margin: 0;
     padding: 0;
 }
 
 #header {
-    width: 100%;
-    background-color: black;
+    background-color: #0000AA;
+    background-image: linear-gradient(to bottom, #AAAAFF, #0000AA);
 }
 
 #header-title {
@@ -27,11 +28,17 @@ body {
 
 #header-nav li {
     display: inline-block;
-    background-color: black;
+    background-color: #0000AA;
+    background-image: linear-gradient(to bottom, #AAAAFF, #0000AA);
+}
+
+#header-nav li:hover {
+    background-image: linear-gradient(to bottom, #CCCCFF, #4444AA);
 }
 
 #header-nav li.active {
-    background-color: white;
+    background-color: #FFFFFF;
+    background-image: none;
 }
 
 #header-nav a {
@@ -44,7 +51,7 @@ body {
 }
 
 #header-nav li.active a {
-    color: black;
+    color: #0000AA;
 }
 
 #header-nav a:hover {
@@ -55,6 +62,38 @@ body {
     display: inline-block;
     width: 20%;
     vertical-align: top;
+}
+
+#accordion {
+    padding: 1em;
+}
+
+#accordion ul {
+    padding: 0;
+}
+
+#accordion li {
+    padding: 0.5em;
+    font-size: 0.8em;
+}
+
+#accordion li.active {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+#accordion a {
+    text-decoration: none;
+    color: #0000AA;
+}
+
+#accordion a:hover {
+    text-decoration: underline;
+}
+
+#accordion li + li {
+    border-top: 1px solid rgb(204, 204, 204);
 }
 
 #content {
@@ -69,4 +108,5 @@ body {
     font-size: 0.8em;
     vertical-align: middle;
     border-top: solid black 1px;
+    text-align: center;
 }

@@ -1,4 +1,5 @@
 {% extends 'about/base.html' %}
+{% load staticfiles %}
 
 {% block title %}Curriculum Vitae - www.madmox.fr{% endblock %}
 {% block keywords %}curriculum vitae cv maxime rossini{% endblock %}
@@ -6,5 +7,122 @@
 
 {% block nav_about_cv %}active{% endblock %}
 
-{% block content %}
+{% block content_about %}
+    <div id="cv-contact">
+        <img id="cv-profile-photo" src="{% static 'about/img/maxime-rossini.png' %}" alt="Maxime Rossini" width="100" height="100">
+        <div id="cv-contact-primary">
+            <strong>Maxime ROSSINI</strong><br>
+            131 boulevard Pinel<br>
+            69500 Bron, France<br>
+            <img id="cv-profile-email" src="{% static 'about/img/email.png' %}" alt="Adresse email" width="187" height="19">
+        </div>
+        <div id="cv-contact-secondary">
+            Né le 16 octobre 1986<br>
+            Nationalité française<br>
+            Permis B et véhicule
+        </div>
+    </div>
+    <h2 class="cv-section-title">Expériences professionnelles</h2>
+    <table class="cv-section-table">
+        <tbody>
+            <tr>
+                <td class="cv-section-table-date">
+                    Mai 2010 à janvier 2014
+                    <img src="{% static 'about/img/sopragroup.png' %}" alt="Sopra Group" width="100" height="35" class="cv-logo">
+                </td>
+                <td class="cv-section-table-data">
+                    Ingénieur d’études (prestataire) à <strong>Sopra Group</strong>, Limonest, France.<br>
+                    <ul>
+                        <li><span class="cv-section-table-data-period">Décembre 2010 à janvier 2014</span> : Développeur SharePoint 2007 & ASP.Net pour les sites e-commerce du groupe Casino (back-end + front-end). Responsable du développement back-end de l’application mobile d’e-commerce mCasino (web services, base de données, orchestration de services).</li>
+                            <ul><li>En poste chez le client : Casino CIT, Saint-Etienne</li></ul>
+                        <li><span class="cv-section-table-data-period">Juin-juillet 2013</span> : Développeur et administrateur SharePoint 2010 (intranet) pour la SNCF, à Paris.</li>
+                        <li><span class="cv-section-table-data-period">Septembre à novembre 2010</span> : Développements .Net (ASP.Net et traitements batchs) pour un éditeur logiciel e-commerce de la région Lyonnaise. Première expérience en poste chez un client.</li>
+                            <ul><li>En poste chez le client : DotSoft, Caluire (Rhône-Alpes)</li></ul>
+                        <li><span class="cv-section-table-data-period">Mai à août 2010</span> : TMA pour le portail intranet de la région Rhône-Alpes. Formation .Net / ASP.Net et premières mises en relation avec un client.</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="cv-section-table-date">
+                    Juillet 2009 à mars 2010
+                    <img src="{% static 'about/img/la-banque-postale.png' %}" alt="La Banque Postale" width="60" height="60" class="cv-logo">
+                </td>
+                <td class="cv-section-table-data">
+                    Diverses missions intérims et CDD de 4 mois à <strong>La Banque Postale</strong> dans le service gestion des entreprises et des associations (saisie informatique).
+                </td>
+            </tr>
+            <tr>
+                <td class="cv-section-table-date">
+                    2<sup>ème</sup> semestre 2009 (14 semaines)
+                    <img src="{% static 'about/img/insa-lyon.png' %}" alt="INSA Lyon" width="100" height="54" class="cv-logo">
+                </td>
+                <td class="cv-section-table-data">
+                    Projet de fin d’études à l’<strong>INSA de Lyon</strong> (collaboration avec le laboratoire du CITI).  Implémentation de la couche MAC du protocole ZigBee sur carte de développement Lyrtech.<br><i>Travail en équipe, expérience en recherche.</i>
+                </td>
+            </tr>
+            <tr>
+                <td class="cv-section-table-date">
+                    2<sup>ème</sup> semestre 2008 (23 semaines)
+                    <img src="{% static 'about/img/embedia.png' %}" alt="Embedia" width="100" height="32" class="cv-logo">
+                </td>
+                <td class="cv-section-table-data">
+                    Stage long en entreprise à <strong>Embedia</strong>, Villeurbanne, France. Conception et développement sur carte embarquée d’un serveur Bluetooth pour téléphones mobiles.<br><i>Professionnalisme, innovation, respect d’un cahier des charges.</i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2 class="cv-section-title">Formation</h2>
+    <table class="cv-section-table">
+        <tbody>
+            <tr>
+                <td class="cv-section-table-date">
+                    2004 à 2009
+                </td>
+                <td class="cv-section-table-data">
+                    Diplôme d’<strong>ingénieur en télécommunications</strong>, services et usages, obtenu fin 2009 à l’INSA de Lyon, France.
+                </td>
+            </tr>
+            <tr>
+                <td class="cv-section-table-date">
+                    2001 à 2004
+                </td>
+                <td class="cv-section-table-data">
+                    <strong>Baccalauréat scientifique</strong>, spécialités Sciences de l’Ingénieur et Mathématiques, obtenu avec mention bien au Lycée Léonard de Vinci, Villefontaine, France.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2 class="cv-section-title">Compétences</h2>
+    <div class="cv-section-content">
+        <div class="cv-section-content-group">
+            Techniques
+            <ul>
+                <li>&#10004; Langages : C#, Python, Java, C/C++, SQL, JavaScript, Bash, PowerShell</li>
+                <li>&#10004; Protocoles : HTTP, SOAP, TCP/UDP/IP, SSH, FTP, OAuth, SSL</li>
+                <li>&#10004; Frameworks : .Net (3.5), ASP.Net, WCF, SharePoint (2007/2010), Django (1.6)</li>
+                <li>&#10004; Outils : Mercurial, Git, SVN, Visual Studio, Office, Microsoft IIS, Apache</li>
+                <li>&#10004; Systèmes : Administration de serveurs (debian, Windows Server 2003 & 2008), Windows (XP à Seven), Linux desktop</li>
+            </ul>
+        </div>
+        <div class="cv-section-content-group">
+            Fonctionnelles
+            <ul>
+                <li>&#10004; Travail collaboratif (développements en équipes de 2 à 6 personnes)</li>
+                <li>&#10004; Chiffrage (des specs aux tests unitaires) pour des projets de quelques dizaines de jours </li>
+                <li>&#10004; Anglais courant (séjour de 10 semaines en autonomie Nouvelle-Zélande, 920 au TOEIC), notions écrites d’allemand</li>
+            </ul>
+        </div>
+    </div>
+    <h2 class="cv-section-title">Centres d'intérêts</h2>
+    <div class="cv-section-content">
+        <div class="cv-section-content-group">
+            <ul>
+                <li>&#10004; Pratique intensive du <strong>badminton</strong> depuis 2002, quelques tournois dans la région Rhône-Alpes jusqu’en 2009.</li>
+                <li>&#10004; Passionné de <strong>musique</strong>, particulièrement de rock et de metal.</li>
+                <li>&#10004; Gestion d’un petit <strong>site web</strong> personnel Debian/Apache/Django/PostgreSQL (celui-là même !).</li>
+                <li>&#10004; Fan de séries, films, quelques animes. Bonnes connaissances dans les outils d’<strong>encodage/décodage multimédia</strong>.</li>
+            </ul>
+        </div>
+    </div>
+    <div id="cv-references">Références disponibles sur demande</div>
 {% endblock %}
