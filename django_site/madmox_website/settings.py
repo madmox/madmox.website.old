@@ -37,6 +37,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'about',
+    'recipes',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS

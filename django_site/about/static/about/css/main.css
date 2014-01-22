@@ -24,4 +24,3 @@ h1.cv-title { text-transform: uppercase; font-size: 1.8em; }
 .cv-skills-group:not(:last-child), .cv-hobbies-group:not(:last-child) { padding-bottom: 1em; }
 
 #cv-references { text-transform: uppercase; font-weight: bold; font-size: 1.2em; margin-top: 1em; }
-
