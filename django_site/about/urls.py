@@ -5,4 +5,3 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^cv/$', views.cv, name='cv'),
 )
-

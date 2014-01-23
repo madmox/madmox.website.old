@@ -12,6 +12,7 @@ class Migration(SchemaMigration):
         db.create_table('recipes_category', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
+            ('order', self.gf('django.db.models.fields.IntegerField')(unique=True)),
         ))
         db.send_create_signal('recipes', ['Category'])
 
@@ -74,7 +75,8 @@ class Migration(SchemaMigration):
         'recipes.category': {
             'Meta': {'object_name': 'Category'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'order': ('django.db.models.fields.IntegerField', [], {'unique': 'True'})
         },
         'recipes.ingredient': {
             'Meta': {'object_name': 'Ingredient'},

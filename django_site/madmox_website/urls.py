@@ -13,4 +13,5 @@ urlpatterns = patterns('',
 
     # Custom applications
     url(r'^about/', include('about.urls', namespace='about')),
+    url(r'^recipes/', include('recipes.urls', namespace='recipes')),
 )

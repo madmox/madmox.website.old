@@ -10,6 +10,11 @@ class Category(models.Model):
     """
     
     name = models.CharField(max_length=50, verbose_name="nom")
+    order = models.IntegerField(
+        validators=[MinValueValidator(0)],
+        unique=True,
+        verbose_name="Ordre d'affichage"
+    )
     
     class Meta():
         verbose_name = "catégorie"

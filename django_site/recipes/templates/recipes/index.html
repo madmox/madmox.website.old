@@ -1,0 +1,16 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}Accueil recettes - www.madmox.fr{% endblock %}
+{% block keywords %}recettes recette accueil madmox{% endblock %}
+{% block description %}Accueil du sous-site de recettes du site www.madmox.fr{% endblock %}
+
+{% block nav_recipes_index %}active{% endblock %}
+
+{% block content %}
+    <h1 class="recipes-title">Rechercher par catégorie</h1>
+    <ul class="recipes-category-list">
+        {% for category in categories %}
+            <li><a href="{% url 'recipes:category' category.id %}">{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
