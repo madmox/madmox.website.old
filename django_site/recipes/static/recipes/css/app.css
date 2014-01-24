@@ -1,0 +1,21 @@
+/** Base styles **/
+#recipes-content { margin: 0em 5em 2em 1em; padding: 2em; position: relative;  }
+
+h1.recipes-title { margin: 0 0 1em 0; border-bottom: solid rgb(243, 100, 62) 1px; color: rgb(243, 100, 62); }
+h2.recipes-title { margin: 0 0 0.5em 0; color: rgb(255, 150, 100); }
+.recipes-block {
+    border: solid rgb(243, 100, 62) 2px;
+    border-radius: 10px;
+    padding: 1em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.recipes-list { margin: 0 0 0 0; padding: 0 0 0 1em; }
+.recipes-list li { text-align: justify; color: rgb(100, 100, 100); }
+.recipes-list-left { width: 12em; display: inline-block; }
+
+.recipes-data { margin-bottom: 1em; }
+.recipes-tools, .recipes-ingredients { display: inline-block; width: 49%; vertical-align: top; }
+.recipes-tools {  margin: 0 2% 1em 0; }
+.recipes-ingredients {  margin: 0 0 1em 0; }

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-{% load static from staticfiles %}
-{% load core_navigation %}
-{% load about_navigation %}
-{% load recipes_navigation %}
+{% spaceless %}
+    {% load static from staticfiles %}
+    {% load core_navigation %}
+    {% load about_navigation %}
+    {% load recipes_navigation %}
+{% endspaceless %}
 <html lang="fr-FR">
     <head>
         <title>{% block title %}{% endblock %}</title>
@@ -34,7 +36,7 @@
         </div><!--
         --><div id="content">{% block content %}{% endblock %}</div>
         <div id="footer">
-            Copyright © 2013-{% now "Y" %} Maxime ROSSINI
+            Copyright &copy; 2013-{% now "Y" %} Maxime ROSSINI
         </div>
     </body>
 </html>

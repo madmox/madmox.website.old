@@ -5,13 +5,11 @@ body {
 }
 
 #header {
-    background-color: #0000AA;
-    background-image: linear-gradient(to bottom, #AAAAFF, #0000AA);
+    background-color: rgb(32, 80, 129);
 }
 
 #header-title {
-    height: 1.5em;
-    line-height: 1.5em;
+    line-height: 1em;
     font-size: 2em;
     color: white;
     display: inline-block;
@@ -19,26 +17,24 @@ body {
 }
 
 #header-nav {
-    height: 3em;
-    line-height: 3em;
+    height: 2.5em;
+    line-height: 2.5em;
     display: inline-block;
-    margin: 0 0 0 40px;
+    margin: 0 0 0 2em;
     vertical-align: middle;
 }
 
 #header-nav li {
     display: inline-block;
-    background-color: #0000AA;
-    background-image: linear-gradient(to bottom, #AAAAFF, #0000AA);
+    background-color: rgb(32, 80, 129);
 }
 
 #header-nav li:hover {
-    background-image: linear-gradient(to bottom, #CCCCFF, #4444AA);
+    background-color: rgb(70, 110, 150);
 }
 
 #header-nav li.active {
-    background-color: #FFFFFF;
-    background-image: none;
+    background-color: rgb(255, 255, 255);
 }
 
 #header-nav a {
@@ -51,7 +47,7 @@ body {
 }
 
 #header-nav li.active a {
-    color: #0000AA;
+    color: rgb(32, 80, 129);
 }
 
 #header-nav a:hover {
@@ -85,7 +81,7 @@ body {
 
 #accordion a {
     text-decoration: none;
-    color: #0000AA;
+    color: rgb(32, 80, 129);
 }
 
 #accordion a:hover {

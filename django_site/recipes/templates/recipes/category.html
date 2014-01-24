@@ -1,11 +1,16 @@
 {% extends 'recipes/base.html' %}
 
-{% block title %}Dernières recettes - www.madmox.fr{% endblock %}
-{% block keywords %}recettes liste dernières madmox{% endblock %}
-{% block description %}Les dernières recettes publiées sur le site www.madmox.fr{% endblock %}
+{% block title %}{{ category.name }} - www.madmox.fr{% endblock %}
+{% block keywords %}recette recettes {{ category.name }} madmox{% endblock %}
+{% block description %}Liste des recettes appartenant à la catégorie {{ category.name }}{% endblock %}
 
-{% block nav_recipes_index %}active{% endblock %}
-
-{% block content %}
-    <p>Hello, world!</p>
+{% block content_recipes %}
+    <h1 class="recipes-title">{{ category.name }}</h1>
+    <ul class="recipes-list">
+        {% for recipe in category.ordered_recipes %}
+            <li><a href="{% url 'recipes:detail' recipe.id %}">{{ recipe.name }}</a></li>
+        {% empty %}
+            <li class="recipes-list-empty">Aucune recette trouvée pour cette catégorie.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

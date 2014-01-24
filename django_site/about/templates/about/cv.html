@@ -6,29 +6,29 @@
 {% block description %}Le C.V. de Maxime Rossini, l'auteur de ce site.{% endblock %}
 
 {% block content_about %}
-    <div id="cv-contact">
-        <img id="cv-profile-photo" src="{% static 'about/img/maxime-rossini.png' %}" alt="Maxime Rossini" width="100" height="100">
-        <div id="cv-contact-primary">
+    <div id="about-cv-contact">
+        <img id="about-cv-profile-photo" src="{% static 'about/img/maxime-rossini.png' %}" alt="Maxime Rossini" width="100" height="100">
+        <div id="about-cv-contact-primary">
             <strong>Maxime ROSSINI</strong><br>
             131 boulevard Pinel<br>
             69500 Bron, France<br>
-            <img id="cv-profile-email" src="{% static 'about/img/email.png' %}" alt="Adresse email" width="187" height="19">
+            <img id="about-cv-profile-email" src="{% static 'about/img/email.png' %}" alt="Adresse email" width="187" height="19">
         </div>
-        <div id="cv-contact-secondary">
+        <div id="about-cv-contact-secondary">
             Né le 16 octobre 1986<br>
             Nationalité française<br>
             Permis B et véhicule
         </div>
     </div>
-    <h1 class="cv-title">Expériences professionnelles</h1>
-    <div class="cv-jobs">
-        <div class="cv-job">
-            <h2 class="cv-job-name">Développeur SharePoint et responsable back-end webservices</h2>
-            <div class="cv-job-company">Sopra Group</div>
-            <div class="cv-job-period">Mai 2010 à janvier 2014</div>
-            <div class="cv-job-location">Saint-Étienne, France</div>
-            <img class="cv-job-logo" src="{% static 'about/img/sopragroup.png' %}" alt="Sopra Group" width="100" height="35">
-            <div class="cv-job-description">
+    <h1 class="about-cv-title">Expériences professionnelles</h1>
+    <div class="about-cv-jobs">
+        <div class="about-cv-job">
+            <h2 class="about-cv-job-name">Développeur SharePoint et responsable back-end webservices</h2>
+            <div class="about-cv-job-company">Sopra Group</div>
+            <div class="about-cv-job-period">Mai 2010 à janvier 2014</div>
+            <div class="about-cv-job-location">Saint-Étienne, France</div>
+            <img class="about-cv-job-logo" src="{% static 'about/img/sopragroup.png' %}" alt="Sopra Group" width="100" height="35">
+            <div class="about-cv-job-description">
                 <p>En poste au siège informatique du groupe Casino (<strong>Casino CIT</strong>, Saint-Étienne) en tant que prestataire de la société <strong>Sopra Group</strong>. J'étais intégrateur de technologies Microsoft pour les diverses applications web du client :</p>
                 <ul>
                     <li>Responsable du développement back-end pour l'application mobile e-commerce du groupe. Technologies : Microsoft WCF, C#, .Net 3.5/4.0, Visual Studio 2008/2010.</li>
@@ -36,81 +36,81 @@
                 </ul>
             </div>
         </div>
-        <div class="cv-job">
-            <h2 class="cv-job-name">Développeur et administrateur SharePoint 2010</h2>
-            <div class="cv-job-company">Sopra Group</div>
-            <div class="cv-job-period">Juin 2013 à juillet 2013</div>
-            <div class="cv-job-location">Paris (Clichy), France</div>
-            <img class="cv-job-logo" src="{% static 'about/img/sopragroup.png' %}" alt="Sopra Group" width="100" height="35">
-            <div class="cv-job-description">
+        <div class="about-cv-job">
+            <h2 class="about-cv-job-name">Développeur et administrateur SharePoint 2010</h2>
+            <div class="about-cv-job-company">Sopra Group</div>
+            <div class="about-cv-job-period">Juin 2013 à juillet 2013</div>
+            <div class="about-cv-job-location">Paris (Clichy), France</div>
+            <img class="about-cv-job-logo" src="{% static 'about/img/sopragroup.png' %}" alt="Sopra Group" width="100" height="35">
+            <div class="about-cv-job-description">
                 <p>En poste au centre informatique de la <strong>S.N.C.F.</strong> (Paris, Clichy) en tant que prestataire de la société <strong>Sopra Group</strong>. J'étais administrateur SharePoint 2010 et principal développeur dans une équipe de 5 personnes chargée de la maintenance et des évolutions d'une nouvelle plateforme intranet pour le groupe.</p>
                 <p>Réalisation d'un plan de sauvegarde des données et de la configuration de la plateforme, support utilisateur et administration classique des sites.</p>
             </div>
         </div>
-        <div class="cv-job">
-            <h2 class="cv-job-name">Développeur .Net</h2>
-            <div class="cv-job-company">Sopra Group</div>
-            <div class="cv-job-period">Septembre 2010 à novembre 2010</div>
-            <div class="cv-job-location">Lyon (Caluire), France</div>
-            <img class="cv-job-logo" src="{% static 'about/img/sopragroup.png' %}" alt="Sopra Group" width="100" height="35">
-            <div class="cv-job-description">
+        <div class="about-cv-job">
+            <h2 class="about-cv-job-name">Développeur .Net</h2>
+            <div class="about-cv-job-company">Sopra Group</div>
+            <div class="about-cv-job-period">Septembre 2010 à novembre 2010</div>
+            <div class="about-cv-job-location">Lyon (Caluire), France</div>
+            <img class="about-cv-job-logo" src="{% static 'about/img/sopragroup.png' %}" alt="Sopra Group" width="100" height="35">
+            <div class="about-cv-job-description">
                 <p>En poste au sein de la P.M.E. <strong>DotSoft</strong> (Lyon, Caluire) en tant que prestataire de la société <strong>Sopra Group</strong>. J'étais développeur .Net dans une équipe de 3 personnes chargée de la conception et maintenance de sites e-commerce pour diverses enseignes.</p>
                 <p>Implémentation de traitements batch pour l'import de données (catalogues produits notamment), et développement web ASP.Net pour l'enseigne Bricorama.</p>
             </div>
         </div>
-        <div class="cv-job">
-            <h2 class="cv-job-name">Développeur .Net</h2>
-            <div class="cv-job-company">Sopra Group</div>
-            <div class="cv-job-period">Mai 2010 à août 2010</div>
-            <div class="cv-job-location">Lyon (Villeurbanne), France</div>
-            <img class="cv-job-logo" src="{% static 'about/img/sopragroup.png' %}" alt="Sopra Group" width="100" height="35">
-            <div class="cv-job-description">
+        <div class="about-cv-job">
+            <h2 class="about-cv-job-name">Développeur .Net</h2>
+            <div class="about-cv-job-company">Sopra Group</div>
+            <div class="about-cv-job-period">Mai 2010 à août 2010</div>
+            <div class="about-cv-job-location">Lyon (Villeurbanne), France</div>
+            <img class="about-cv-job-logo" src="{% static 'about/img/sopragroup.png' %}" alt="Sopra Group" width="100" height="35">
+            <div class="about-cv-job-description">
                 <p>Prestataire en régie à l'agence de <strong>Sopra Group</strong> (Lyon, Ecully) pour le compte de la <strong>région Rhône-Alpes</strong>. J'étais développeur .Net dans une équipe d'une vingtaine de personnes chargée de la T.M.A. du portail intranet et de diverses applications du client.</p>
                 <p>Formation ASP.Net, premières mises en relation avec un client.</p>
             </div>
         </div>
-        <div class="cv-job">
-            <h2 class="cv-job-name">Développeur Matlab/Simulink</h2>
-            <div class="cv-job-company">INSA de Lyon</div>
-            <div class="cv-job-period">Mars 2009 à juin 2009</div>
-            <div class="cv-job-location">Lyon (Villeurbanne), France</div>
-            <img class="cv-job-logo" src="{% static 'about/img/insa-lyon.png' %}" alt="INSA Lyon" width="100" height="54">
-            <div class="cv-job-description">
+        <div class="about-cv-job">
+            <h2 class="about-cv-job-name">Développeur Matlab/Simulink</h2>
+            <div class="about-cv-job-company">INSA de Lyon</div>
+            <div class="about-cv-job-period">Mars 2009 à juin 2009</div>
+            <div class="about-cv-job-location">Lyon (Villeurbanne), France</div>
+            <img class="about-cv-job-logo" src="{% static 'about/img/insa-lyon.png' %}" alt="INSA Lyon" width="100" height="54">
+            <div class="about-cv-job-description">
                 <p>Projet de fin détudes à l’<strong>INSA de Lyon</strong> (en collaboration avec le laboratoire du CITI). J'avais pour objectif l'implémentation de la couche MAC du protocole ZigBee sur carte de développement Lyrtech, en me servant de Matalb/Simulink et de cartes de développement prêtées par le CITI. Mon projet devait s'imbriquer au dessus du projet d'un autre étudiant, qui implémentait la couche physique du protocole.</p>
             </div>
         </div>
-        <div class="cv-job">
-            <h2 class="cv-job-name">Développeur C++</h2>
-            <div class="cv-job-company">Embedia</div>
-            <div class="cv-job-period">Juillet 2008 à décembre 2008</div>
-            <div class="cv-job-location">Lyon (Villeurbanne), France</div>
-            <img class="cv-job-logo" src="{% static 'about/img/embedia.png' %}" alt="Embedia" width="100" height="32">
-            <div class="cv-job-description">
+        <div class="about-cv-job">
+            <h2 class="about-cv-job-name">Développeur C++</h2>
+            <div class="about-cv-job-company">Embedia</div>
+            <div class="about-cv-job-period">Juillet 2008 à décembre 2008</div>
+            <div class="about-cv-job-location">Lyon (Villeurbanne), France</div>
+            <img class="about-cv-job-logo" src="{% static 'about/img/embedia.png' %}" alt="Embedia" width="100" height="32">
+            <div class="about-cv-job-description">
                 <p>Stage long en entreprise à <strong>Embedia</strong> au cours de ma formation à l'INSA de Lyon. J'ai réalisé la conception et le développement d'un serveur Bluetooth pour téléphones mobiles (juste avant l'évènement des smartphones), dans le cadre de la mise à disposition de facilités d'accès aux transports en commun pour les Personnes à Mobilité Réduite (P.M.R.).</p>
             </div>
         </div>
     </div>
     
-    <h1 class="cv-title">Formation</h1>
-    <div class="cv-formations">
-        <div class="cv-formation">
-            <h2 class="cv-formation-name">INSA de Lyon</h2>
-            <img class="cv-formation-logo" src="{% static 'about/img/insa-lyon.png' %}" alt="INSA Lyon" width="100" height="54">
-            <div class="cv-formation-description">Diplôme d’<strong>ingénieur en Télécommunications</strong>, Services et Usages.</div>
-            <div class="cv-formation-period">2004 à 2009</div>
-            <div class="cv-formation-location">Lyon (Villeurbanne)</div>
+    <h1 class="about-cv-title">Formation</h1>
+    <div class="about-cv-formations">
+        <div class="about-cv-formation">
+            <h2 class="about-cv-formation-name">INSA de Lyon</h2>
+            <img class="about-cv-formation-logo" src="{% static 'about/img/insa-lyon.png' %}" alt="INSA Lyon" width="100" height="54">
+            <div class="about-cv-formation-description">Diplôme d’<strong>ingénieur en Télécommunications</strong>, Services et Usages.</div>
+            <div class="about-cv-formation-period">2004 à 2009</div>
+            <div class="about-cv-formation-location">Lyon (Villeurbanne)</div>
         </div>
-        <div class="cv-formation">
-            <h2 class="cv-formation-name">Lycée Léonard de Vinci</h2>
-            <div class="cv-formation-description"><strong>Baccalauréat scientifique</strong>, spécialités Sciences de l’Ingénieur et Mathématiques, obtenu avec mention bien.</div>
-            <div class="cv-formation-period">2001 à 2004</div>
-            <div class="cv-formation-location">Villefontaine (Isère)</div>
+        <div class="about-cv-formation">
+            <h2 class="about-cv-formation-name">Lycée Léonard de Vinci</h2>
+            <div class="about-cv-formation-description"><strong>Baccalauréat scientifique</strong>, spécialités Sciences de l’Ingénieur et Mathématiques, obtenu avec mention bien.</div>
+            <div class="about-cv-formation-period">2001 à 2004</div>
+            <div class="about-cv-formation-location">Villefontaine (Isère)</div>
         </div>
     </div>
     
-    <h1 class="cv-title">Compétences</h1>
-    <div class="cv-skills">
-        <div class="cv-skills-group">
+    <h1 class="about-cv-title">Compétences</h1>
+    <div class="about-cv-skills">
+        <div class="about-cv-skills-group">
             Techniques
             <ul>
                 <li>&#10004; Langages : C#, Python, Java, C/C++, SQL, JavaScript, Bash, PowerShell</li>
@@ -120,7 +120,7 @@
                 <li>&#10004; Systèmes : Administration de serveurs (debian, Windows Server 2003 & 2008), Windows (XP à Seven), Linux desktop</li>
             </ul>
         </div>
-        <div class="cv-skills-group">
+        <div class="about-cv-skills-group">
             Fonctionnelles
             <ul>
                 <li>&#10004; Travail collaboratif (développements en équipes de 2 à 6 personnes)</li>
@@ -129,9 +129,9 @@
             </ul>
         </div>
     </div>
-    <h1 class="cv-title">Centres d'intérêts</h1>
-    <div class="cv-hobbies">
-        <div class="cv-hobbies-group">
+    <h1 class="about-cv-title">Centres d'intérêts</h1>
+    <div class="about-cv-hobbies">
+        <div class="about-cv-hobbies-group">
             <ul>
                 <li>&#10004; Pratique intensive du <strong>badminton</strong> depuis 2002, quelques tournois dans la région Rhône-Alpes jusqu’en 2009.</li>
                 <li>&#10004; Passionné de <strong>musique</strong>, particulièrement de rock et de metal.</li>
@@ -140,5 +140,5 @@
             </ul>
         </div>
     </div>
-    <div id="cv-references">Références disponibles sur demande</div>
+    <div id="about-cv-references">Références disponibles sur demande</div>
 {% endblock %}

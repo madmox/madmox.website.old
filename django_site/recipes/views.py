@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from recipes.models import Category
+from django.shortcuts import render, get_object_or_404
+from recipes.models import Category, Recipe
 
 
 def index(request):
@@ -7,7 +7,9 @@ def index(request):
     return render(request, 'recipes/index.html', {'categories': categories})
 
 def category(request, category_id):
-    return render(request, 'recipes/category.html', {})
+    category = get_object_or_404(Category, id=category_id)
+    return render(request, 'recipes/category.html', {'category': category})
 
 def detail(request, recipe_id):
-    return render(request, 'recipes/detail.html', {})
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    return render(request, 'recipes/detail.html', {'recipe': recipe})

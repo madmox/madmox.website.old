@@ -1,11 +1,61 @@
 {% extends 'recipes/base.html' %}
+{% load recipes_filters %}
 
-{% block title %}Dernières recettes - www.madmox.fr{% endblock %}
-{% block keywords %}recettes liste dernières madmox{% endblock %}
-{% block description %}Les dernières recettes publiées sur le site www.madmox.fr{% endblock %}
+{% block title %}{{ recipe.name }} - www.madmox.fr{% endblock %}
+{% block keywords %}recette {{ recipe.name }} madmox{% endblock %}
+{% block description %}Détail de la recette {{ recipe.name }}{% endblock %}
 
-{% block nav_recipes_index %}active{% endblock %}
-
-{% block content %}
-    <p>Hello, world!</p>
+{% block content_recipes %}
+    <h1 class="recipes-title">{{ recipe.name }}</h1>
+    <div class="recipes-block recipes-data">
+        <h2 class="recipes-title">Données</h2>
+        <ul class="recipes-list">
+            <li>
+                <span class="recipes-list-left">Type :</span>
+                <span class="recipes-list-right">{{ recipe.category.name }}</span>
+            </li>
+            <li>
+                <span class="recipes-list-left">Nombre de personnes :</span>
+                <span class="recipes-list-right">{{ recipe.nb_persons }}</span>
+            </li>
+            <li>
+                <span class="recipes-list-left">Préparation :</span>
+                <span class="recipes-list-right">{{ recipe.preparation_time|display_minutes }}</span>
+            </li>
+            <li>
+                <span class="recipes-list-left">Temps total :</span>
+                <span class="recipes-list-right">{{ recipe.total_time|display_minutes }}</span>
+            </li>
+        </ul>
+    </div><!--
+    --><div class="recipes-block recipes-tools">
+        <h2 class="recipes-title">Ustensiles</h2>
+        <ul class="recipes-list">
+            {% for tool in recipe.tool_set.all %}
+                <li>{{ tool.label }}</li>
+            {% empty %}
+                <li class="recipes-list-empty">Aucun ustensile n'est nécesaire pour cette recette.</li>
+            {% endfor %}
+        </ul>
+    </div><!--
+    --><div class="recipes-block recipes-ingredients">
+        <h2 class="recipes-title">Ingrédients</h2>
+        <ul class="recipes-list">
+            {% for ingredient in recipe.ingredient_set.all %}
+                <li>{{ ingredient.label }}</li>
+            {% empty %}
+                <li class="recipes-list-empty">Il n'y a aucun ingrédient saisi pour cette recette.</li>
+            {% endfor %}
+        </ul>
+    </div><!--
+    --><div class="recipes-block recipes-steps">
+        <h2 class="recipes-title">Recette</h2>
+        <ul class="recipes-list">
+            {% for step in recipe.step_set.all %}
+                <li>{{ step.label }}</li>
+            {% empty %}
+                <li class="recipes-list-empty">Il n'y a aucune étape saisie pour cette recette.</li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

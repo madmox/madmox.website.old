@@ -21,6 +21,9 @@ class Category(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def ordered_recipes(self):
+        return self.recipe_set.all().order_by('name')
 
 
 class Recipe(models.Model):
