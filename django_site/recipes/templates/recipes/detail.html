@@ -34,7 +34,7 @@
     --><div class="recipes-block recipes-tools">
         <h2 class="recipes-title">Ustensiles</h2>
         <ul class="recipes-list">
-            {% for tool in recipe.tool_set.all %}
+            {% for tool in recipe.ordered_tools %}
                 <li>{{ tool.label }}</li>
             {% empty %}
                 <li class="recipes-list-empty">Aucun ustensile n'est nécesaire pour cette recette.</li>
@@ -44,7 +44,7 @@
     --><div class="recipes-block recipes-ingredients">
         <h2 class="recipes-title">Ingrédients</h2>
         <ul class="recipes-list">
-            {% for ingredient in recipe.ingredient_set.all %}
+            {% for ingredient in recipe.ordered_ingredients %}
                 <li>{{ ingredient.label }}</li>
             {% empty %}
                 <li class="recipes-list-empty">Il n'y a aucun ingrédient saisi pour cette recette.</li>
@@ -54,7 +54,7 @@
     --><div class="recipes-block recipes-steps">
         <h2 class="recipes-title">Recette</h2>
         <ul class="recipes-list">
-            {% for step in recipe.step_set.all %}
+            {% for step in recipe.ordered_steps %}
                 <li>{{ step.label }}</li>
             {% empty %}
                 <li class="recipes-list-empty">Il n'y a aucune étape saisie pour cette recette.</li>

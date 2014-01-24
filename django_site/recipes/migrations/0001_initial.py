@@ -14,6 +14,8 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('order', self.gf('django.db.models.fields.IntegerField')(unique=True)),
             ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(blank=True, auto_now_add=True)),
+            ('updated_at', self.gf('django.db.models.fields.DateTimeField')(blank=True, auto_now=True)),
         ))
         db.send_create_signal('recipes', ['Category'])
 
@@ -25,9 +27,9 @@ class Migration(SchemaMigration):
             ('nb_persons', self.gf('django.db.models.fields.IntegerField')()),
             ('preparation_time', self.gf('django.db.models.fields.IntegerField')()),
             ('total_time', self.gf('django.db.models.fields.IntegerField')()),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(blank=True, auto_now_add=True)),
+            ('updated_at', self.gf('django.db.models.fields.DateTimeField')(blank=True, auto_now=True)),
         ))
         db.send_create_signal('recipes', ['Recipe'])
 
@@ -35,28 +37,49 @@ class Migration(SchemaMigration):
         db.create_table('recipes_tool', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('label', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('order', self.gf('django.db.models.fields.IntegerField')()),
             ('recipe', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['recipes.Recipe'])),
         ))
         db.send_create_signal('recipes', ['Tool'])
+
+        # Adding unique constraint on 'Tool', fields ['recipe', 'order']
+        db.create_unique('recipes_tool', ['recipe_id', 'order'])
 
         # Adding model 'Ingredient'
         db.create_table('recipes_ingredient', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('label', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('order', self.gf('django.db.models.fields.IntegerField')()),
             ('recipe', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['recipes.Recipe'])),
         ))
         db.send_create_signal('recipes', ['Ingredient'])
+
+        # Adding unique constraint on 'Ingredient', fields ['recipe', 'order']
+        db.create_unique('recipes_ingredient', ['recipe_id', 'order'])
 
         # Adding model 'Step'
         db.create_table('recipes_step', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('label', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('order', self.gf('django.db.models.fields.IntegerField')()),
             ('recipe', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['recipes.Recipe'])),
         ))
         db.send_create_signal('recipes', ['Step'])
 
+        # Adding unique constraint on 'Step', fields ['recipe', 'order']
+        db.create_unique('recipes_step', ['recipe_id', 'order'])
+
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Step', fields ['recipe', 'order']
+        db.delete_unique('recipes_step', ['recipe_id', 'order'])
+
+        # Removing unique constraint on 'Ingredient', fields ['recipe', 'order']
+        db.delete_unique('recipes_ingredient', ['recipe_id', 'order'])
+
+        # Removing unique constraint on 'Tool', fields ['recipe', 'order']
+        db.delete_unique('recipes_tool', ['recipe_id', 'order'])
+
         # Deleting model 'Category'
         db.delete_table('recipes_category')
 
@@ -76,39 +99,44 @@ class Migration(SchemaMigration):
     models = {
         'recipes.category': {
             'Meta': {'object_name': 'Category'},
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'auto_now_add': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'order': ('django.db.models.fields.IntegerField', [], {'unique': 'True'})
+            'order': ('django.db.models.fields.IntegerField', [], {'unique': 'True'}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'auto_now': 'True'})
         },
         'recipes.ingredient': {
-            'Meta': {'object_name': 'Ingredient'},
+            'Meta': {'unique_together': "(('recipe', 'order'),)", 'object_name': 'Ingredient'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'order': ('django.db.models.fields.IntegerField', [], {}),
             'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['recipes.Recipe']"})
         },
         'recipes.recipe': {
             'Meta': {'object_name': 'Recipe'},
             'category': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['recipes.Category']"}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'auto_now_add': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'nb_persons': ('django.db.models.fields.IntegerField', [], {}),
             'preparation_time': ('django.db.models.fields.IntegerField', [], {}),
             'total_time': ('django.db.models.fields.IntegerField', [], {}),
-            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {'blank': 'True', 'auto_now': 'True'})
         },
         'recipes.step': {
-            'Meta': {'object_name': 'Step'},
+            'Meta': {'unique_together': "(('recipe', 'order'),)", 'object_name': 'Step'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'label': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'order': ('django.db.models.fields.IntegerField', [], {}),
             'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['recipes.Recipe']"})
         },
         'recipes.tool': {
-            'Meta': {'object_name': 'Tool'},
+            'Meta': {'unique_together': "(('recipe', 'order'),)", 'object_name': 'Tool'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'order': ('django.db.models.fields.IntegerField', [], {}),
             'recipe': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['recipes.Recipe']"})
         }
     }

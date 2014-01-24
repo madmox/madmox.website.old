@@ -5,16 +5,19 @@ from recipes.models import Category, Recipe, Tool, Ingredient, Step
 class ToolInline(admin.TabularInline):
     model = Tool
     extra = 1
+    ordering = ('order',)
 
 
 class IngredientInline(admin.TabularInline):
     model = Ingredient
     extra = 1
+    ordering = ('order',)
 
 
 class StepInline(admin.TabularInline):
     model = Step
     extra = 1
+    ordering = ('order',)
 
     
 class RecipeAdmin(admin.ModelAdmin):
