@@ -11,6 +11,8 @@ def display_minutes(value):
             result = '{0}h{1}'.format(hours, minutes)
         else:
             result = '{0}h'.format(hours)
-    else:
+    elif minutes > 1:
         result = '{0} minutes'.format(minutes)
+    else:
+        result = '{0} minute'.format(minutes)
     return result
