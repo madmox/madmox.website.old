@@ -13,7 +13,12 @@ class Category(models.Model):
     order = models.IntegerField(
         validators=[MinValueValidator(0)],
         unique=True,
-        verbose_name="Ordre d'affichage"
+        verbose_name="ordre d'affichage"
+    )
+    image = models.ImageField(
+        upload_to='recipes/categories/',
+        blank=True,
+        verbose_name="image"
     )
     
     class Meta():
@@ -51,6 +56,11 @@ class Recipe(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True,
         verbose_name="date de mise à jour"
+    )
+    image = models.ImageField(
+        upload_to='recipes/recipes/',
+        blank=True,
+        verbose_name="image"
     )
     
     class Meta():

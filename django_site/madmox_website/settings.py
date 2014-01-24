@@ -97,3 +97,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+# User-uploaded files
+MEDIA_ROOT = os.environ['DJANGO_MEDIA_ROOT']
+MEDIA_URL = '/medias/'

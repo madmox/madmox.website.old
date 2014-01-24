@@ -13,6 +13,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('order', self.gf('django.db.models.fields.IntegerField')(unique=True)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
         ))
         db.send_create_signal('recipes', ['Category'])
 
@@ -26,6 +27,7 @@ class Migration(SchemaMigration):
             ('total_time', self.gf('django.db.models.fields.IntegerField')()),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100, blank=True)),
         ))
         db.send_create_signal('recipes', ['Recipe'])
 
@@ -75,6 +77,7 @@ class Migration(SchemaMigration):
         'recipes.category': {
             'Meta': {'object_name': 'Category'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'order': ('django.db.models.fields.IntegerField', [], {'unique': 'True'})
         },
@@ -89,6 +92,7 @@ class Migration(SchemaMigration):
             'category': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['recipes.Category']"}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'nb_persons': ('django.db.models.fields.IntegerField', [], {}),
             'preparation_time': ('django.db.models.fields.IntegerField', [], {}),

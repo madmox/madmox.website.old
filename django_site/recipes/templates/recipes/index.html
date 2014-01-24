@@ -7,8 +7,15 @@
 {% block content_recipes %}
     <h1 class="recipes-title">Rechercher par catégorie</h1>
     <ul class="recipes-categories">
-        {% for category in categories %}
-            <li><a href="{% url 'recipes:category' category.id %}">{{ category.name }}</a></li>
-        {% endfor %}
+        {% spaceless %}{% for category in categories %}
+            <a href="{% url 'recipes:category' category.pk %}">
+                <li>
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" width="150" height="100">
+                    {% endif %}
+                    <span>{{ category.name }}</span>
+                </li>
+            </a>
+        {% endfor %}{% endspaceless %}
     </ul>
 {% endblock %}

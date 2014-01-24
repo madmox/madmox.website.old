@@ -7,9 +7,9 @@ def index(request):
     return render(request, 'recipes/index.html', {'categories': categories})
 
 def category(request, category_id):
-    category = get_object_or_404(Category, id=category_id)
+    category = get_object_or_404(Category, pk=category_id)
     return render(request, 'recipes/category.html', {'category': category})
 
 def detail(request, recipe_id):
-    recipe = get_object_or_404(Recipe, id=recipe_id)
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
     return render(request, 'recipes/detail.html', {'recipe': recipe})

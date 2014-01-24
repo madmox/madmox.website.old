@@ -4,6 +4,7 @@ DJANGO_SETTINGS_MODULE
 DJANGO_SECRET_KEY
 DJANGO_ALLOWED_HOSTS (space-separated list)
 DJANGO_DATABASE_NAME
+DJANGO_MEDIA_ROOT
 
 # Defines environment keys optional in this django install
 

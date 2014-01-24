@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import RedirectView
+from madmox_website import settings
 
 from django.contrib import admin
 admin.autodiscover()
@@ -15,3 +16,13 @@ urlpatterns = patterns('',
     url(r'^about/', include('about.urls', namespace='about')),
     url(r'^recipes/', include('recipes.urls', namespace='recipes')),
 )
+
+if settings.DEBUG:
+    # Serve media files in DEBUG mode
+    urlpatterns += patterns('',
+        url(
+            r'^medias/(?P<path>.*)$',
+            'django.views.static.serve',
+            {'document_root': settings.MEDIA_ROOT}
+        )
+    )

@@ -15,7 +15,49 @@ h2.recipes-title { margin: 0 0 0.5em 0; color: rgb(255, 150, 100); }
 .recipes-list li { text-align: justify; color: rgb(100, 100, 100); }
 .recipes-list-left { width: 12em; display: inline-block; }
 
-.recipes-data { margin-bottom: 1em; }
+/** Index template **/
+.recipes-categories { padding: 0; }
+.recipes-categories a {
+    display: inline-block;
+    width: 49%;
+    padding: 1em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: solid rgb(243, 100, 62) 2px;
+    border-radius: 10px;
+    margin-bottom: 1em;
+    text-decoration: none;
+}
+.recipes-categories a:nth-child(odd) { margin-right: 2%; }
+.recipes-categories a:hover { box-shadow: 0.5em 0.5em 0.25em rgb(136, 136, 136); position: relative; right: 0.5em; bottom: 0.5em; }
+.recipes-categories li { list-style-type: none; display: table; }
+.recipes-categories img { display: table-cell; vertical-align: middle; float: left; }
+.recipes-categories span { display: table-cell; padding-left: 1em; vertical-align: middle; color: rgb(100, 100, 100); font-size: 2em; height: 100px; }
+
+/** Category template **/
+.recipes-recipes { padding: 0; }
+.recipes-recipes a {
+    display: inline-block;
+    width: 32%;
+    padding: 1em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: solid rgb(243, 100, 62) 2px;
+    border-radius: 10px;
+    margin-bottom: 1em;
+    text-decoration: none;
+}
+.recipes-recipes a:nth-child(odd) { margin-right: 2%; }
+.recipes-recipes a:hover { box-shadow: 0.5em 0.5em 0.25em rgb(136, 136, 136); position: relative; right: 0.5em; bottom: 0.5em; }
+.recipes-recipes li { list-style-type: none; display: table; }
+.recipes-recipes img { display: table-cell; vertical-align: middle; float: left; }
+.recipes-recipes span { display: table-cell; padding-left: 1em; vertical-align: middle; color: rgb(100, 100, 100); font-size: 1.2em; height: 60px; }
+
+/** Detail template **/
+.recipes-data { margin-bottom: 1em; position: relative; }
 .recipes-tools, .recipes-ingredients { display: inline-block; width: 49%; vertical-align: top; }
 .recipes-tools {  margin: 0 2% 1em 0; }
 .recipes-ingredients {  margin: 0 0 1em 0; }
+.recipes-data img { position: absolute; top: 2em; left: 30em;}

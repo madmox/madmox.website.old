@@ -27,6 +27,9 @@
                 <span class="recipes-list-right">{{ recipe.total_time|display_minutes }}</span>
             </li>
         </ul>
+        {% if recipe.image %}
+            <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" width="150" height="100">
+        {% endif %}
     </div><!--
     --><div class="recipes-block recipes-tools">
         <h2 class="recipes-title">Ustensiles</h2>
