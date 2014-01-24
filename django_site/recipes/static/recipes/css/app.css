@@ -48,8 +48,9 @@ h2.recipes-title { margin: 0 0 0.5em 0; color: rgb(255, 150, 100); }
     border-radius: 10px;
     margin-bottom: 1em;
     text-decoration: none;
+    margin-right: 2%;
 }
-.recipes-recipes a:nth-child(odd) { margin-right: 2%; }
+.recipes-recipes a:nth-child(3n) { margin-right: 0; }
 .recipes-recipes a:hover { box-shadow: 0.5em 0.5em 0.25em rgb(136, 136, 136); position: relative; right: 0.5em; bottom: 0.5em; }
 .recipes-recipes li { list-style-type: none; display: table; }
 .recipes-recipes img { display: table-cell; vertical-align: middle; float: left; }
