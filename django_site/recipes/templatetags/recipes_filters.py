@@ -8,7 +8,7 @@ def display_minutes(value):
     minutes = value % 60
     if hours > 0:
         if (minutes > 0):
-            result = '{0}h{1}'.format(hours, minutes)
+            result = '{0}h{1:02}'.format(hours, minutes)
         else:
             result = '{0}h'.format(hours)
     elif minutes > 1:
