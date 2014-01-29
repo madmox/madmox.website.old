@@ -100,4 +100,4 @@ STATICFILES_DIRS = (
 
 # User-uploaded files
 MEDIA_ROOT = os.environ['DJANGO_MEDIA_ROOT']
-MEDIA_URL = '/medias/'
+MEDIA_URL = '/media/'
