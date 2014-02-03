@@ -4,8 +4,8 @@ from django.core.validators import MinValueValidator
 
 # Models
 class Category(models.Model):
-    """Each recipe as one and only one category
-    
+    """
+    Each recipe has one and only one category
     It is used to classify recipes in groups to facilitate search operations
     """
     
@@ -40,7 +40,8 @@ class Category(models.Model):
 
 
 class Recipe(models.Model):
-    """Represents a recipe as displayed on each recipe's page
+    """
+    Represents a recipe as displayed on each recipe's page
     """
     
     name = models.CharField(max_length=50, verbose_name="nom")
@@ -88,7 +89,8 @@ class Recipe(models.Model):
 
 
 class Tool(models.Model):
-    """A recipe tool
+    """
+    A recipe tool
     """
     
     label = models.CharField(max_length=100, verbose_name="nom")
@@ -107,7 +109,8 @@ class Tool(models.Model):
 
 
 class Ingredient(models.Model):
-    """A recipe ingredient
+    """
+    A recipe ingredient
     """
     
     label = models.CharField(max_length=100, verbose_name="nom")
@@ -126,7 +129,8 @@ class Ingredient(models.Model):
 
 
 class Step(models.Model):
-    """A recipe step
+    """
+    A recipe step
     """
     
     label = models.CharField(max_length=200, verbose_name="libellé")

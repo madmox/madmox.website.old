@@ -21,7 +21,7 @@ if settings.DEBUG:
     # Serve media files in DEBUG mode
     urlpatterns += patterns('',
         url(
-            r'^medias/(?P<path>.*)$',
+            r'^{0}/(?P<path>.*)$'.format(settings.MEDIA_URL[1:-1]),
             'django.views.static.serve',
             {'document_root': settings.MEDIA_ROOT}
         )
