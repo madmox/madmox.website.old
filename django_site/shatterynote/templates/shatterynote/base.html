@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+
+{% block keywords %}shatterynote shattery note secret usage unique one-time madmox{% endblock %}
+{% block additional_page_head %}
+    <link href="{% static 'shatterynote/css/app.css' %}" media="all" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}<div id="shatterynote-content">{% block content_shatterynote %}{% endblock %}</div>{% endblock %}
