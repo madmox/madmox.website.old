@@ -20,3 +20,4 @@ class SettingsTests(TestCase):
         test_environment_key('DJANGO_ALLOWED_HOSTS')
         test_environment_key('DJANGO_DATABASE_NAME')
         test_environment_key('DJANGO_MEDIA_ROOT')
+        test_environment_key('DJANGO_AES_KEY')
