@@ -8,7 +8,7 @@ class NewSecretForm(forms.Form):
     This form is used when a user wants to create a new secret
     """
     
-    message = forms.CharField(max_length=5000)
+    message = forms.CharField(max_length=5000, widget=forms.Textarea)
     passphrase = forms.CharField(max_length=100, required=False)
 
 
