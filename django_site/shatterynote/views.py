@@ -82,11 +82,6 @@ def secret(request, encrypted_data):
     if request.method == 'POST':
         # The user submitted a passphrase for this secret
         
-        # Asserts the secret is indeed secure
-        # If it isn't, redirects the user with a GET method
-        if not secret.is_secure():
-            return HttpResponseRedirect(request.get_full_path())
-        
         # Maps submitted data to the form object
         form = SubmitPassphraseForm(secret, request.POST)
         

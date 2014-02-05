@@ -25,14 +25,15 @@ class SubmitPassphraseForm(forms.Form):
         self.secret = secret
     
     def clean_passphrase(self):
-        # Checks the submitted passphrase is the same as the one stored
-        # in database
-        passphrase = self.cleaned_data['passphrase']
-        if self.secret.is_passphrase_valid(passphrase):
-            # Passphrases are identics: uncipher the message and removes
-            # the passphrase from the secret
-            self.secret.decrypt_message_with_passphrase()
-            self.secret.save()
-        else:
-            # Passphrases are differents: wrong input
-            raise forms.ValidationError("La phrase secrète est invalide.")
+        if self.secret.is_secure():
+            # Checks the submitted passphrase is the same as the one stored
+            # in database
+            passphrase = self.cleaned_data['passphrase']
+            if self.secret.is_passphrase_valid(passphrase):
+                # Passphrases are identics: uncipher the message and removes
+                # the passphrase from the secret
+                self.secret.decrypt_message_with_passphrase()
+                self.secret.save()
+            else:
+                # Passphrases are differents: wrong input
+                raise forms.ValidationError("La phrase secrète est invalide.")

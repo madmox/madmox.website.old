@@ -14,7 +14,7 @@ def hash_passphrase(passphrase, salt_size=16, salt=None):
 
 
 def validate_passphrase(passphrase, passphrase_hash, salt_size=16):
-
+    
     # Python memoryview inconsistency arround the '+' operator:
     # b'x' + memoryview(b'x') is OK but memoryview(b'x') + b'x' is not...
     # See http://bugs.python.org/issue13298
