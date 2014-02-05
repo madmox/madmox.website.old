@@ -8,7 +8,7 @@ class CategoryModelTests(TestCase):
         Asserts category gets created successfully
         """
         category = create_category('Catégorie 1', 1)
-        self.assertNotEqual(category.pk, None)
+        self.assertIsNotNone(category.pk)
 
 
 class RecipeModelTests(TestCase):
@@ -18,7 +18,7 @@ class RecipeModelTests(TestCase):
         """
         category = create_category('Catégorie 1', 1)
         recipe = create_recipe('Recette 1', category, 1, 2, 2)
-        self.assertNotEqual(recipe.pk, None)
+        self.assertIsNotNone(recipe.pk)
 
 
 class ToolModelTests(TestCase):
@@ -29,7 +29,7 @@ class ToolModelTests(TestCase):
         category = create_category('Catégorie 1', 1)
         recipe = create_recipe('Recette 1', category, 1, 2, 2)
         tool = create_tool('Ustensile 1', 1, recipe)
-        self.assertNotEqual(tool.pk, None)
+        self.assertIsNotNone(tool.pk)
 
 
 class IngredientModelTests(TestCase):
@@ -40,7 +40,7 @@ class IngredientModelTests(TestCase):
         category = create_category('Catégorie 1', 1)
         recipe = create_recipe('Recette 1', category, 1, 2, 2)
         ingredient = create_ingredient('Ingrédient 1', 1, recipe)
-        self.assertNotEqual(ingredient.pk, None)
+        self.assertIsNotNone(ingredient.pk)
 
 
 class StepModelTests(TestCase):
@@ -51,4 +51,4 @@ class StepModelTests(TestCase):
         category = create_category('Catégorie 1', 1)
         recipe = create_recipe('Recette 1', category, 1, 2, 2)
         step = create_step('Etape 1', 1, recipe)
-        self.assertNotEqual(step.pk, None)
+        self.assertIsNotNone(step.pk)
