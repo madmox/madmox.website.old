@@ -4,7 +4,8 @@
 {% block keywords %}a propos about madmox description site{% endblock %}
 {% block description %}Description du site www.madmox.fr, plan du site, etc.{% endblock %}
 
-{% block content_about %}
+{% block content %}
+<div id="about-index">
     <h1>A propos du site</h1>
     <p>Bonjour, visiteur ! Je m'appelle Maxime Rossini et te voilà sur mon site personnel.</p>
     <p>Ce site est un regroupement de toutes les idées de contenus sympas, de liens utiles et d'outils développés par mes soins. Ce n'est pas un blog, c'est plus une collection de tout ce qui a pu me passer par la tête, que j'ai eu le temps de réaliser et que j'ai trouvé plus pratique à accéder en ligne qu'à conserver sur mon ordinateur.</p>
@@ -24,4 +25,5 @@
         <li>V.C.S. : <a href="http://mercurial.selenic.com/">Mercurial</a> (vous pouvez trouver les sources du site sur <a href="https://bitbucket.org/madmox/">BitBucket</a>)</li>
         <li>Outils divers : <a href="http://south.aeracode.org/">South</a> (module Python de migration de base de données pour Django), <a href="http://initd.org/psycopg/">Psycopg2</a> (adaptateur PostgreSQL pour Python), <a href="http://fabfile.org/">Fabric</a> (module Python d'automatisation de déploiement)</li>
     </ul>
+</div>
 {% endblock %}
