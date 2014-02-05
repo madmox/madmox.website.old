@@ -5,6 +5,7 @@ from shatterynote.models import Secret
 
 
 class IndexViewTests(TestCase):
+
     def test_index_view_get(self):
         """
         Tests the view returns a 200 HTTP code
@@ -72,6 +73,7 @@ class IndexViewTests(TestCase):
 
 
 class StatusViewTests(TestCase):
+
     def setUp(self):
         self.secret = Secret.objects.create_secret('passphrase', 'message')
         self.secret.save()
@@ -148,6 +150,7 @@ class StatusViewTests(TestCase):
 
 
 class SecretViewTests(TestCase):
+
     def create_secret(self, passphrase, message):
         # Initializes data
         self.secret = Secret.objects.create_secret(passphrase, message)

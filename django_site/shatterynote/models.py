@@ -2,7 +2,6 @@ from django.db import models
 from django.core.urlresolvers import reverse
 
 import base64
-from datetime import datetime, timedelta
 
 from shatterynote import settings
 from shatterynote.helpers import (
@@ -50,8 +49,9 @@ class SecretManager(models.Manager):
         return secret
     
     def purge(self):
-        now = datetime.datetime.now()
-        outdated = now - datetime.timedelta(days=7)
+        from django.utils import timezone
+        now = timezone.now()
+        outdated = now - timezone.timedelta(days=7)
         outdated_secrets = self.get_queryset().filter(created_at__lt=outdated)
         outdated_secrets.delete()
 
@@ -128,13 +128,9 @@ class Secret(models.Model):
     a secret
     """
     
-    encrypted_message = models.BinaryField(
-        max_length=10000, null=True, blank=True
-    )
-    passphrase_hash = models.BinaryField(
-        max_length=64, null=True, blank=True
-    )
-    aes_key = models.BinaryField(max_length=500, null=True, blank=True)
+    encrypted_message = models.BinaryField(null=True, blank=True)
+    passphrase_hash = models.BinaryField(null=True, blank=True)
+    aes_key = models.BinaryField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     # Custom manager
@@ -153,17 +149,25 @@ class Secret(models.Model):
     def decrypt_message(self, key):
         encryptor = AESEncryptor(key)
         message_b = encryptor.decrypt(self.encrypted_message)
-        return message_b.decode('utf8')
+        try:
+            message = message_b.decode('utf8')
+        except UnicodeDecodeError:
+            message = None
+        return message
         
     def decrypt_message_with_passphrase(self):
-        # self.passphrase_hash contains the AES-256 key prepended by a salt,
-        # so we need to discard it
-        encryptor = AESEncryptor(self.passphrase_hash[-32:])
-        self.encrypted_message = encryptor.decrypt(self.encrypted_message)
-        self.passphrase_hash = None
+        if self.is_secure():
+            # self.passphrase_hash contains the AES-256 key prepended by a salt,
+            # so we need to discard it
+            encryptor = AESEncryptor(self.passphrase_hash[-32:])
+            self.encrypted_message = encryptor.decrypt(self.encrypted_message)
+            self.passphrase_hash = None
     
     def is_passphrase_valid(self, passphrase):
-        return validate_passphrase(passphrase, self.passphrase_hash)
+        if self.is_secure():
+            return validate_passphrase(passphrase, self.passphrase_hash)
+        else:
+            return True
     
     def get_url(self):
         if self.aes_key:
