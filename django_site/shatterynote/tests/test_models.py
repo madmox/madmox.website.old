@@ -3,6 +3,7 @@ from django.db import DatabaseError
 from django.utils import timezone
 
 from shatterynote.models import Secret
+from shatterynote.helpers import generate_aes_key
 
 
 def flip_bits(a):
@@ -145,14 +146,36 @@ class SecretManagerTests(TestCase):
         secrets = Secret.objects.all()
         self.assertEqual(len(secrets), 1)
     
-    def test_models_secretmanager_unpack_infos(self):
-        pass
+    def test_models_secretmanager_pack_unpack_infos_valid(self):
+        secret_id = 1
+        secret_key = generate_aes_key(16)
+        encrypted_data = Secret.objects.pack_infos(secret_id, secret_key)
+        id, key = Secret.objects.unpack_infos(encrypted_data)
+        
+        self.assertEqual(secret_id, id)
+        self.assertEqual(secret_key, key)
     
-    def test_models_secretmanager_pack_infos(self):
-        pass
+    def test_models_secretmanager_pack_unpack_infos_invalid(self):
+        secret_id = 1
+        secret_key = generate_aes_key(16)
+        encrypted_data = Secret.objects.pack_infos(secret_id, secret_key)
+        encrypted_data = b'ABCD' + encrypted_data
+        
+        with self.assertRaises(ValueError):
+            id, key = Secret.objects.unpack_infos(encrypted_data)
+        
+    def test_models_secretmanager_encrypt_decrypt_id_valid(self):
+        secret_id = 1
+        encrypted_id = Secret.objects.encrypt_id(secret_id)
+        id = Secret.objects.decrypt_id(encrypted_id)
+        
+        self.assertEqual(secret_id, id)
     
-    def test_models_secretmanager_encrypt_id(self):
-        pass
+    def test_models_secretmanager_encrypt_decrypt_id_invalid(self):
+        secret_id = 1
+        encrypted_id = Secret.objects.encrypt_id(secret_id)
+        encrypted_id = b'ABCD' + encrypted_id
+        
+        with self.assertRaises(ValueError):
+            id = Secret.objects.decrypt_id(encrypted_id)
     
-    def test_models_secretmanager_decrypt_id(self):
-        pass

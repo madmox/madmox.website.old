@@ -107,17 +107,14 @@ class SecretManager(models.Manager):
         '/status/<id>/' urls to find unread secrets
         """
         if base64_id:
-            try:
-                bytes_id = base64.urlsafe_b64decode(base64_id)
-                encryptor = AESEncryptor(settings.AES_KEY)
-                bytes_id = encryptor.validate_hmac(bytes_id)
-                bytes_id = encryptor.decrypt(bytes_id)
-                secret_id = int.from_bytes(
-                    bytes_id, byteorder='big'
-                )
-                return secret_id
-            except Exception:
-                return None
+            bytes_id = base64.urlsafe_b64decode(base64_id)
+            encryptor = AESEncryptor(settings.AES_KEY)
+            bytes_id = encryptor.validate_hmac(bytes_id)
+            bytes_id = encryptor.decrypt(bytes_id)
+            secret_id = int.from_bytes(
+                bytes_id, byteorder='big'
+            )
+            return secret_id
         else:
             return None
 

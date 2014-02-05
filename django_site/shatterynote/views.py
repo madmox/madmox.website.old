@@ -50,15 +50,17 @@ def index(request):
 
 def status(request, secret_id):
     # Parses and validates URL infos
-    secret_id = Secret.objects.decrypt_id(secret_id)
+    try:
+        secret_id = Secret.objects.decrypt_id(secret_id)
+    except ValueError:
+        secret_id = None
+        secret = None
+        secret_url = None
     
     # Gets secret if it exists
     if secret_id:
         secret = get_object_or_none(Secret, pk=secret_id)
         secret_url = secret.get_url()
-    else:
-        secret = None
-        secret_url = None
 
     return render(
         request, 'shatterynote/status.html',
