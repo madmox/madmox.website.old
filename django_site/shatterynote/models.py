@@ -6,7 +6,10 @@ from datetime import datetime, timedelta
 
 from shatterynote import settings
 from shatterynote.helpers import (
-    AESEncryptor, generate_aes_key, hash_passphrase, validate_passphrase
+    AESEncryptor,
+    generate_aes_key,
+    hash_passphrase,
+    validate_passphrase
 )
 
 
@@ -58,6 +61,7 @@ class SecretManager(models.Manager):
         
         # Deciphers URL data
         raw_data = base64.urlsafe_b64decode(encrypted_data)
+        raw_data = encryptor.validate_hmac(raw_data)
         clear_data = encryptor.decrypt(raw_data)
         secret_id = int.from_bytes(clear_data[:Secret.ID_SIZE], byteorder='big')
         secret_key = clear_data[Secret.ID_SIZE:]
@@ -72,6 +76,7 @@ class SecretManager(models.Manager):
         bytes_id = int.to_bytes(secret_id, length=Secret.ID_SIZE, byteorder='big')
         clear_data = bytes_id + secret_key
         raw_data = encryptor.encrypt(clear_data)
+        raw_data = encryptor.append_hmac(raw_data)
         encrypted_data = base64.urlsafe_b64encode(raw_data)
         
         return encrypted_data
@@ -88,6 +93,7 @@ class SecretManager(models.Manager):
             )
             encryptor = AESEncryptor(settings.AES_KEY)
             bytes_id = encryptor.encrypt(bytes_id)
+            bytes_id = encryptor.append_hmac(bytes_id)
             base64_id = base64.urlsafe_b64encode(bytes_id)
             return base64_id
         else:
@@ -101,13 +107,17 @@ class SecretManager(models.Manager):
         '/status/<id>/' urls to find unread secrets
         """
         if base64_id:
-            bytes_id = base64.urlsafe_b64decode(base64_id)
-            encryptor = AESEncryptor(settings.AES_KEY)
-            bytes_id = encryptor.decrypt(bytes_id)
-            secret_id = int.from_bytes(
-                bytes_id, byteorder='big'
-            )
-            return secret_id
+            try:
+                bytes_id = base64.urlsafe_b64decode(base64_id)
+                encryptor = AESEncryptor(settings.AES_KEY)
+                bytes_id = encryptor.validate_hmac(bytes_id)
+                bytes_id = encryptor.decrypt(bytes_id)
+                secret_id = int.from_bytes(
+                    bytes_id, byteorder='big'
+                )
+                return secret_id
+            except Exception:
+                return None
         else:
             return None
 
@@ -132,9 +142,9 @@ class Secret(models.Model):
     
     # ID_SIZE is the size (in bytes) of the encrypted secret ID
     # So it includes the auto-id from database (4 bytes) as well as
-    # the nonce used to encrypt it (16 bytes)
+    # the nonce used to encrypt it (= AES block size)
     AUTO_ID_SIZE = 4
-    ID_SIZE = AUTO_ID_SIZE + AESEncryptor.NONCE_SIZE
+    ID_SIZE = AUTO_ID_SIZE + AESEncryptor.BLOCK_SIZE
     
     def is_secure(self):
         """The secret is secure if it has a passphrase set"""

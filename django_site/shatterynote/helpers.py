@@ -1,11 +1,12 @@
 from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
+from Crypto.Hash import SHA256, HMAC
 from Crypto.Random import get_random_bytes
 from Crypto.Util import Counter
 
 
-def hash_passphrase(passphrase, salt_size=16):
-    salt = get_random_bytes(salt_size)
+def hash_passphrase(passphrase, salt_size=16, salt=None):
+    if salt is None:
+        salt = get_random_bytes(salt_size)
     bytes_passphrase = passphrase.encode('utf8')
     h = SHA256.new()
     h.update(salt + bytes_passphrase)
@@ -42,7 +43,8 @@ class AESEncryptor:
     decryption.
     """
     
-    NONCE_SIZE = 16
+    # AES block size is 128 bits (= 16 bytes)
+    BLOCK_SIZE = 16
     
     def __init__(self, key):
         """Initializes the instance and validates the key"""
@@ -53,6 +55,7 @@ class AESEncryptor:
         if isinstance(key, memoryview):
             key = bytes(key)
         
+        # AES key is either 128, 192 or 256 bits long
         if len(key) not in [16, 24, 32]:
             raise ValueError(
                 "'key' length must be 16, 24 or 32. Got {0} instead.".format(
@@ -62,8 +65,8 @@ class AESEncryptor:
         self.key = key
         
     def get_encryptor(self, nonce):
-        iv_int = int.from_bytes(nonce, byteorder='big')
-        counter = Counter.new(self.NONCE_SIZE * 8, initial_value=iv_int)
+        ctr_value = int.from_bytes(nonce, byteorder='big')
+        counter = Counter.new(128, initial_value=ctr_value)
         return AES.new(self.key, AES.MODE_CTR, counter=counter)
         
     def encrypt(self, raw_data):
@@ -75,7 +78,7 @@ class AESEncryptor:
         if isinstance(raw_data, memoryview):
             raw_data = bytes(raw_data)
         
-        nonce = get_random_bytes(self.NONCE_SIZE)
+        nonce = get_random_bytes(self.BLOCK_SIZE)
         encryptor = self.get_encryptor(nonce)
         return nonce + encryptor.encrypt(raw_data)
         
@@ -88,14 +91,46 @@ class AESEncryptor:
         if isinstance(ciphered_data, memoryview):
             ciphered_data = bytes(ciphered_data)
         
-        if len(ciphered_data) < self.NONCE_SIZE:
+        if len(ciphered_data) < self.BLOCK_SIZE:
             raise ValueError(
                 "'ciphered_data' length must be at least {0} bytes."
                 " Got {0} instead.".format(
-                    self.NONCE_SIZE,
+                    self.BLOCK_SIZE,
                     len(ciphered_data)
                 )
             )
-        nonce = ciphered_data[:self.NONCE_SIZE]
+        nonce = ciphered_data[:self.BLOCK_SIZE]
         encryptor = self.get_encryptor(nonce)
-        return encryptor.decrypt(ciphered_data[self.NONCE_SIZE:])
+        return encryptor.decrypt(ciphered_data[self.BLOCK_SIZE:])
+    
+    def append_hmac(self, ciphered_data):
+        """
+        Appends the HMAC-SHA256 at the end of ciphered_data with the
+        internal encryptor's AES key
+        """
+        
+        # Python memoryview inconsistency arround the '+' operator:
+        # b'x' + memoryview(b'x') is OK but memoryview(b'x') + b'x' is not...
+        # See http://bugs.python.org/issue13298
+        if isinstance(ciphered_data, memoryview):
+            ciphered_data = bytes(ciphered_data)
+        
+        h = HMAC.new(self.key, digestmod=SHA256)
+        h.update(ciphered_data)
+        return ciphered_data + h.digest()
+    
+    def validate_hmac(self, ciphered_data):
+        """
+        Validates the HMAC-SHA256 at the end of ciphered_data with the
+        internal encryptor's AES key
+        """
+        if len(ciphered_data) < 32:
+            raise ValueError("ciphered_data should contain at least 32 bytes")
+        
+        h = HMAC.new(self.key, digestmod=SHA256)
+        h.update(ciphered_data[:-32])
+        hmac = h.digest()
+        if hmac != ciphered_data[-32:]:
+            raise ValueError("HMAC is invalid, could not authenticate the data")
+        
+        return ciphered_data[:-32]

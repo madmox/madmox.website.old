@@ -26,7 +26,7 @@ class IndexViewTests(TestCase):
             form = response.context['form']
         except KeyError as ke:
             self.fail("Context does not contain key {0}".format(str(ke)))
-        self.assertIsNot(form, None)
+        self.assertIsNotNone(form)
         self.assertTrue(form.is_bound)
         self.assertFalse(form.is_valid())
 
@@ -48,7 +48,7 @@ class IndexViewTests(TestCase):
         # Asserts model got created
         secrets = Secret.objects.all()
         self.assertEqual(len(secrets), 1)
-        self.assertIs(secrets[0].passphrase_hash, None)
+        self.assertIsNone(secrets[0].passphrase_hash)
         
     def test_index_view_post_with_passphrase(self):
         """
@@ -68,7 +68,7 @@ class IndexViewTests(TestCase):
         # Asserts model got created
         secrets = Secret.objects.all()
         self.assertEqual(len(secrets), 1)
-        self.assertIsNot(secrets[0].passphrase_hash, None)
+        self.assertIsNotNone(secrets[0].passphrase_hash)
 
 
 class StatusViewTests(TestCase):
@@ -95,6 +95,8 @@ class StatusViewTests(TestCase):
             secret_url = response.context['secret_url']
         except KeyError as ke:
             self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertIsNotNone(secret)
+        self.assertIsNone(secret.aes_key)
         self.assertRegex(secret_url, '/shatterynote/secret/')
     
     def test_status_view_get_secondtime(self):
@@ -118,7 +120,9 @@ class StatusViewTests(TestCase):
             secret_url = response.context['secret_url']
         except KeyError as ke:
             self.fail("context does not contain key {0}".format(str(ke)))
-        self.assertIs(secret_url, None)
+        self.assertIsNotNone(secret)
+        self.assertIsNone(secret.aes_key)
+        self.assertIsNone(secret_url)
     
     def test_status_view_get_invalid(self):
         """
@@ -133,7 +137,14 @@ class StatusViewTests(TestCase):
         )
         
         # Asserts conditions
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
+        try:
+            secret = response.context['secret']
+            secret_url = response.context['secret_url']
+        except KeyError as ke:
+            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertIsNone(secret)
+        self.assertIsNone(secret_url)
 
 
 class SecretViewTests(TestCase):
@@ -143,6 +154,15 @@ class SecretViewTests(TestCase):
         self.secret.save()
         self.secret_id = Secret.objects.encrypt_id(self.secret.id)
         self.secret_url = self.secret.get_url()
+    
+    def get_context_params(self, context):
+        try:
+            message = context['message']
+            form = context['form']
+            found = context['found']
+        except KeyError as ke:
+            self.fail("context does not contain key {0}".format(str(ke)))
+        return (message, form, found)
         
     def test_secret_view_get_not_secure(self):
         """
@@ -156,23 +176,20 @@ class SecretViewTests(TestCase):
         
         # Requests
         response = self.client.get(self.secret_url)
-        try:
-            message = response.context['message']
-            form = response.context['form']
-        except KeyError as ke:
-            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertEqual(response.status_code, 200)
+        message, form, found = self.get_context_params(response.context)
         secrets = Secret.objects.all()
         
         # Assertions
-        self.assertEqual(response.status_code, 200)
-        self.assertIs(form, None)
+        self.assertIsNone(form)
         self.assertEqual(message, 'message')
+        self.assertTrue(found)
         self.assertEqual(len(secrets), 0)
         
     def test_secret_view_get_secure(self):
         """
         Requests a secured secret. The secret view should return a
-        form to type the passphrase, and not delete the secret.
+        form to type the passphrase, and sould not delete the secret.
         """
         
         # Initializes data
@@ -181,23 +198,21 @@ class SecretViewTests(TestCase):
         
         # Requests
         response = self.client.get(self.secret_url)
-        try:
-            message = response.context['message']
-            form = response.context['form']
-        except KeyError as ke:
-            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertEqual(response.status_code, 200)
+        message, form, found = self.get_context_params(response.context)
         secrets = Secret.objects.all()
         
         # Assertions
-        self.assertEqual(response.status_code, 200)
-        self.assertIsNot(form, None)
-        self.assertIs(message, None)
+        self.assertIsNotNone(form)
+        self.assertIsNone(message)
+        self.assertTrue(found)
         self.assertEqual(len(secrets), 1)
         
     def test_secret_view_get_inexistant(self):
         """
-        Requests an inexistant secret
-        Should return an HTTP 404 status code
+        Requests an inexistant secret / invalid URL
+        Should not return any info about any secret, and should not
+        delete/modify any existing secret
         """
         
         # Initializes data
@@ -206,9 +221,15 @@ class SecretViewTests(TestCase):
         # Requests
         fake_url = self.secret_url.replace('/secret/', '/secret/ABCD')
         response = self.client.get(fake_url)
+        self.assertEqual(response.status_code, 200)
+        message, form, found = self.get_context_params(response.context)
+        secrets = Secret.objects.all()
         
         # Assertions
-        self.assertEqual(response.status_code, 404)
+        self.assertIsNone(form)
+        self.assertIsNone(message)
+        self.assertFalse(found)
+        self.assertEqual(len(secrets), 1)
         
     def test_secret_view_post_not_secure(self):
         """
@@ -226,25 +247,23 @@ class SecretViewTests(TestCase):
             {'passphrase': 'passphrase'},
             follow=True
         )
-        try:
-            message = response.context['message']
-            form = response.context['form']
-        except KeyError as ke:
-            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertEqual(response.status_code, 200)
+        message, form, found = self.get_context_params(response.context)
         secrets = Secret.objects.all()
         
         # Assertions
         self.assertIsInstance(response.redirect_chain, list)
         self.assertEqual(len(response.redirect_chain), 1)
-        self.assertEqual(response.status_code, 200)
-        self.assertIs(form, None)
+        self.assertIsNone(form)
+        self.assertTrue(found)
         self.assertEqual(message, 'message')
         self.assertEqual(len(secrets), 0)
         
     def test_secret_view_post_secure_valid(self):
         """
         Submits a valid passphrase for a secret which is secure
-        The secret view should redirect to the same page, in GET
+        The secret view should redirect to the same page, in GET,
+        and the secret message should be displayed
         """
         
         # Initializes data
@@ -255,14 +274,19 @@ class SecretViewTests(TestCase):
         response = self.client.post(
             self.secret_url,
             {'passphrase': 'passphrase'},
-            follow=False
+            follow=True
         )
+        self.assertEqual(response.status_code, 200)
+        message, form, found = self.get_context_params(response.context)
         secrets = Secret.objects.all()
         
         # Assertions
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(len(secrets), 1)
-        self.assertFalse(secrets[0].is_secure())
+        self.assertIsInstance(response.redirect_chain, list)
+        self.assertEqual(len(response.redirect_chain), 1)
+        self.assertIsNone(form)
+        self.assertTrue(found)
+        self.assertEqual(message, 'message')
+        self.assertEqual(len(secrets), 0)
         
     def test_secret_view_post_secure_invalid(self):
         """
@@ -278,26 +302,24 @@ class SecretViewTests(TestCase):
         response = self.client.post(
             self.secret_url,
             {'passphrase': 'wrong_passphrase'},
-            follow=False
+            follow=True
         )
-        
         self.assertEqual(response.status_code, 200)
-        
-        try:
-            form = response.context['form']
-        except KeyError as ke:
-            self.fail("context does not contain key {0}".format(str(ke)))
+        message, form, found = self.get_context_params(response.context)
         secrets = Secret.objects.all()
         
         # Assertions
-        self.assertIsNot(form, None)
+        self.assertIsNone(message)
+        self.assertIsNotNone(form)
+        self.assertTrue(found)
         self.assertFalse(form.is_valid())
         self.assertEqual(len(secrets), 1)
         
     def test_secret_view_post_inexistant(self):
         """
         Requests an inexistant secret
-        Should return an HTTP 404 status code
+        Should not return any info about any secret, and should not
+        delete/modify any existing secret
         """
         
         # Initializes data
@@ -308,8 +330,14 @@ class SecretViewTests(TestCase):
         response = self.client.post(
             fake_url,
             {'passphrase': 'passphrase'},
-            follow=False
+            follow=True
         )
+        self.assertEqual(response.status_code, 200)
+        message, form, found = self.get_context_params(response.context)
+        secrets = Secret.objects.all()
         
         # Assertions
-        self.assertEqual(response.status_code, 404)
+        self.assertIsNone(message)
+        self.assertIsNone(form)
+        self.assertFalse(found)
+        self.assertEqual(len(secrets), 1)

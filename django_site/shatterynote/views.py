@@ -7,6 +7,13 @@ from shatterynote.models import Secret
 from shatterynote.forms import NewSecretForm, SubmitPassphraseForm
 
 
+def get_object_or_none(model, **kwargs):
+    try:
+        return model.objects.get(**kwargs)
+    except model.DoesNotExist:
+        return None
+
+
 def index(request):
     if request.method == 'POST':
         # HTTP method is POST, the user tries to create a new secret
@@ -42,13 +49,16 @@ def index(request):
 
 
 def status(request, secret_id):
-    # Retrieves the secret public infos
-    try:
-        secret_id = Secret.objects.decrypt_id(secret_id)
-    except ValueError:
-        raise Http404()
-    secret = get_object_or_404(Secret, pk=secret_id)
-    secret_url = secret.get_url()
+    # Parses and validates URL infos
+    secret_id = Secret.objects.decrypt_id(secret_id)
+    
+    # Gets secret if it exists
+    if secret_id:
+        secret = get_object_or_none(Secret, pk=secret_id)
+        secret_url = secret.get_url()
+    else:
+        secret = None
+        secret_url = None
 
     return render(
         request, 'shatterynote/status.html',
@@ -60,8 +70,14 @@ def secret(request, encrypted_data):
     template = 'shatterynote/secret.html'
     
     # Checks the secret exists
-    secret_id, secret_key = Secret.objects.unpack_infos(encrypted_data)
-    secret = get_object_or_404(Secret, pk=secret_id)
+    try:
+        secret_id, secret_key = Secret.objects.unpack_infos(encrypted_data)
+        secret = Secret.objects.get(pk=secret_id)
+    except Exception:
+        return render(
+            request, template,
+            {'form': None, 'message': None, 'found': False}
+        )
     
     if request.method == 'POST':
         # The user submitted a passphrase for this secret
@@ -84,7 +100,10 @@ def secret(request, encrypted_data):
             pass
         
         # Renders the secret's page, with error messages
-        return render(request, template, {'form': form, 'message': None})
+        return render(
+            request, template,
+            {'form': form, 'message': None, 'found': True}
+        )
     else:
         # The user is trying to view the secret
         if secret.is_secure():
@@ -100,4 +119,7 @@ def secret(request, encrypted_data):
         
         # Renders the secret's page, be it with the message or with
         # the passphrase form
-        return render(request, template, {'form': form, 'message': message})
+        return render(
+            request, template,
+            {'form': form, 'message': message, 'found': True}
+        )

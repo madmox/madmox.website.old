@@ -5,6 +5,6 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^status/(?P<secret_id>(?:[-_A-Za-z0-9]{4})*(?:[-_A-Za-z0-9]{2}==|[-_A-Za-z0-9]{3}=)?)/$',
         views.status, name='status'),
-    url(r'^secret/(?P<encrypted_data>(?:[-_A-Za-z0-9]{4})*(?:[-_A-Za-z0-9]{2}==|[-_A-Za-z0-9]{3}=)?)/$',
+    url(r'^secret/(?P<encrypted_data>[-_=A-Za-z0-9]+)/$',
         views.secret, name='secret'),
 )
