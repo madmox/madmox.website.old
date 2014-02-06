@@ -4,4 +4,18 @@
 {% block description %}Page de création d'un secret à usage unique{% endblock %}
 
 {% block content_shatterynote %}
+    <p class="disclaimer">Entrez dans la boîte de texte ci-dessous un message, un mot de passe, ou tout autre secret à partager avec quelqu'un.</p>
+    <form action="{% url 'shatterynote:index' %}" method="POST">{% csrf_token %}
+        <div class="message">
+            {{ form.message.errors }}
+            {{ form.message }}
+        </div>
+        <div class="passphrase">
+            {{ form.passphrase.errors }}
+            <label for="id_passphrase">Entrez une phrase secrète pour protéger votre message (facultatif) :</label>
+            {{ form.passphrase }}
+        </div>
+        <input type="submit" value="Valider" />
+    </form>
+    <p class="details">Comment ça fonctionne ?</p>
 {% endblock %}

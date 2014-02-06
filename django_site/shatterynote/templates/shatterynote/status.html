@@ -1,7 +1,18 @@
 {% extends 'shatterynote/base.html' %}
+{% load days_until from shatterynote_filters %}
 
 {% block title %}Votre secret - www.madmox.fr{% endblock %}
 {% block description %}Page de consultation de votre secret{% endblock %}
 
 {% block content_shatterynote %}
+    {% if secret %}
+        <div class="status-secret">
+            {% if secret_url %}
+                <p class="url-block">U.R.L. de votre secret : <span class="url-value">{{ secret_url }}</span></p>
+            {% endif %}
+            <p class="expiration-block">Votre secret expire dans <span class="expiration-value">{{ secret.expiration_date|days_until }}</span>. Il n'a pas encore été visualisé.</p>
+        </div>
+    {% else %}
+        <p class="status-nosecret">Aucun secret ne correspond à l'U.R.L. que vous avez demandée.</p>
+    {% endif %}
 {% endblock %}
