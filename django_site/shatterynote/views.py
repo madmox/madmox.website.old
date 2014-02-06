@@ -14,6 +14,31 @@ def get_object_or_none(model, **kwargs):
         return None
 
 
+def unpad_base64_string(data):
+    if isinstance(data, str):
+        return data.replace('=', '')
+    else:
+        return data.replace(b'=', b'')
+
+
+def pad_base64_string(data):
+    # Restores equal signs to the string
+    if len(data) % 3 == 0:
+        pass
+    elif len(data) % 3 == 1:
+        if isinstance(data, str):
+            data = data + '=='
+        else:
+            data = data + b'=='
+    elif len(data) % 3 == 2:
+        if isinstance(data, str):
+            data = data + '='
+        else:
+            data = data + b'='
+    return data
+    
+
+
 def index(request):
     if request.method == 'POST':
         # HTTP method is POST, the user tries to create a new secret
@@ -32,6 +57,7 @@ def index(request):
             # Redirects the user to the secret status page so that
             # he can get the one-time U.R.L.
             secret_id = Secret.objects.encrypt_id(secret.pk)
+            secret_id = unpad_base64_string(secret_id)
             return HttpResponseRedirect(
                 reverse('shatterynote:status', args=(secret_id,))
             )
@@ -49,6 +75,8 @@ def index(request):
 
 
 def status(request, secret_id):
+    secret_id = pad_base64_string(secret_id)
+    
     # Parses and validates URL infos
     try:
         secret_id = Secret.objects.decrypt_id(secret_id)
@@ -60,7 +88,14 @@ def status(request, secret_id):
     # Gets secret if it exists
     if secret_id:
         secret = get_object_or_none(Secret, pk=secret_id)
-        secret_url = secret.get_url()
+        url_segment = secret.get_url_segment()
+        if url_segment:
+            # Strips equal signs from the string
+            url_segment = unpad_base64_string(url_segment)
+            relative_url = reverse('shatterynote:secret', args=(url_segment,))
+            secret_url = request.build_absolute_uri(relative_url)
+        else:
+            secret_url = None
 
     return render(
         request, 'shatterynote/status.html',
@@ -70,6 +105,8 @@ def status(request, secret_id):
 
 def secret(request, encrypted_data):
     template = 'shatterynote/secret.html'
+    
+    encrypted_data = pad_base64_string(encrypted_data)
     
     # Checks the secret exists
     try:

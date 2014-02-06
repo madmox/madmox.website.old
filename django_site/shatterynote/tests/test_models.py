@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.db import DatabaseError
 from django.utils import timezone
 
+import base64
+
 from shatterynote.models import Secret
 from shatterynote.helpers import generate_aes_key
 
@@ -22,6 +24,15 @@ class SecretTests(TestCase):
         secret = Secret.objects.create_secret('', 'message')
         secret.save()
         self.assertFalse(secret.is_secure())
+    
+    def test_models_secret_expiration_date(self):
+        secret = Secret.objects.create_secret('', 'message')
+        secret.save()
+        try:
+            expires = secret.expiration_date()
+        except Exception as e:
+            self.fail("Failed to get expiration date: {0}".format(str(e)))
+        self.assertGreater(expires, secret.created_at)
         
     def test_model_secret_decrypt_message_key_valid(self):
         secret = Secret.objects.create_secret('', 'message')
@@ -78,13 +89,8 @@ class SecretTests(TestCase):
         aes_key = secret.aes_key
         
         # Gets URL
-        url = secret.get_url()
-        try:
-            encrypted_data = url.rsplit('/', 2)[1]
-            import urllib.parse
-            encrypted_data = urllib.parse.unquote(encrypted_data)
-        except IndexError:
-            self.fail("generated URL does not contain encrypted_data segment")
+        encrypted_data = secret.get_url_segment()
+        self.assertIsNotNone(encrypted_data)
         secret_id, secret_key = Secret.objects.unpack_infos(encrypted_data)
         self.assertEqual(secret_id, secret.pk)
         self.assertEqual(secret_key, aes_key)
@@ -97,9 +103,9 @@ class SecretTests(TestCase):
         aes_key = secret.aes_key
         
         # Gets URL
-        url = secret.get_url()
-        url = secret.get_url()
-        self.assertIsNone(url)
+        url_segment = secret.get_url_segment()
+        url_segment = secret.get_url_segment()
+        self.assertIsNone(url_segment)
         
 
 class SecretManagerTests(TestCase):
@@ -149,9 +155,19 @@ class SecretManagerTests(TestCase):
     def test_models_secretmanager_pack_unpack_infos_valid(self):
         secret_id = 1
         secret_key = generate_aes_key(16)
-        encrypted_data = Secret.objects.pack_infos(secret_id, secret_key)
-        id, key = Secret.objects.unpack_infos(encrypted_data)
+        base64_data = Secret.objects.pack_infos(secret_id, secret_key)
         
+        # Data should contain 68 bytes:
+        # - 16 bytes for the AES-CTR nonce
+        # - 4 bytes for the secret ID
+        # - 16 bytes for the AES-128 key
+        # - 32 bytes for the HMAC-SHA256
+        encrypted_data = base64.urlsafe_b64decode(base64_data)
+        self.assertEqual(len(encrypted_data), (16+4+16+32))
+        
+        id, key = Secret.objects.unpack_infos(base64_data)
+        
+        # Should get the same data as input
         self.assertEqual(secret_id, id)
         self.assertEqual(secret_key, key)
     

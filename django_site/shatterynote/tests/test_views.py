@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from shatterynote.models import Secret
+from shatterynote.views import unpad_base64_string, pad_base64_string
 
 
 class IndexViewTests(TestCase):
@@ -78,6 +79,7 @@ class StatusViewTests(TestCase):
         self.secret = Secret.objects.create_secret('passphrase', 'message')
         self.secret.save()
         self.secret_id = Secret.objects.encrypt_id(self.secret.id)
+        self.secret_id = unpad_base64_string(self.secret_id)
     
     def test_status_view_get_firsttime(self):
         """
@@ -156,7 +158,12 @@ class SecretViewTests(TestCase):
         self.secret = Secret.objects.create_secret(passphrase, message)
         self.secret.save()
         self.secret_id = Secret.objects.encrypt_id(self.secret.id)
-        self.secret_url = self.secret.get_url()
+        url_segment = self.secret.get_url_segment()
+        url_segment = unpad_base64_string(url_segment)
+        if url_segment:
+            self.secret_url = reverse('shatterynote:secret', args=(url_segment,))
+        else:
+            self.secret_url = None
     
     def get_context_params(self, context):
         try:
