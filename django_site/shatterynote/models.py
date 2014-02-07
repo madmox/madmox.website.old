@@ -78,6 +78,8 @@ class SecretManager(models.Manager):
         clear_data = encryptor.decrypt(encrypted_data)
         secret_id = int.from_bytes(clear_data[:Secret.AUTO_ID_SIZE], byteorder='big')
         secret_key = clear_data[Secret.AUTO_ID_SIZE:]
+        if len(secret_key) not in [16, 24, 32]:
+            raise ValueError("AES key is invalid")
         
         return secret_id, secret_key
     
