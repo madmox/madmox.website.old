@@ -1,0 +1,146 @@
+/** Base styles **/
+#shatterynote-content { padding: 2em 1em 1em 1em; width: 80%; }
+form { border: 1px solid rgb(220, 220, 220); padding-top: 2em;  }
+label { display: block; text-align: center; }
+textarea { resize: none; }
+input[type="text"], input[type="submit"], textarea {
+    display: table;
+    width: 90%;
+    margin: 1em auto;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+}
+input[type="text"], textarea {
+    padding: 1em;
+    background-color: rgb(248, 248, 248);
+    transition: box-shadow 0.2s linear 0s;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+input[type="text"]:focus, textarea:focus {
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(0, 100, 200, 0.6);
+}
+input[type="submit"] {
+    background-color: rgb(200, 30, 0);
+    color: white;
+    font-weight: bold;
+    font-size: 2em;
+    padding: 0.2em;
+}
+input[type="submit"]:hover, input[type="submit"]:focus {
+    background-color: rgb(255, 50, 0);
+    cursor: pointer;
+}
+.errorlist {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.errorlist li {
+    display: table;
+    width: 90%;
+    padding: 0.2em 0.5em;;
+    margin: 1em auto;
+    color: red;
+    font-weight: bold;
+    border: 2px solid red;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-radius: 4px;
+}
+.errorlist li:before { content: "* "; }
+
+/** Index styles **/
+.message label { font-size: 1.5em; }
+.message sup { font-size: 0.5em; }
+.annotations { font-style: italic; color: rgb(100, 100, 100); font-size: 0.9em; list-style-type: none; padding: 0 0 0 1em; }
+.details h2 { margin-top: 2em; font-style: italic; }
+.details li { text-align: justify; }
+.details .annotations { padding: 0; }
+
+/** Status styles **/
+.status-secret {
+    border: 1px solid rgb(220, 220, 220);
+    padding: 1em; 
+    margin-bottom: 1em;
+}
+.url-block {
+    padding: 0.2em;
+    margin: 0;
+    font-weight: bold;
+}
+.url-value {
+    background-color: rgb(255, 220, 100);
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 0.5em 1em;
+    margin: 0.2em 0 0 0;
+}
+ .no-url {
+    color: rgb(200, 0, 0);
+ }
+.expiration-block {
+    font-weight: bold;
+    padding: 0;
+    margin: 2em 0 0 0;
+}
+.expiration-value{
+    background-color: rgb(230, 230, 230);
+    border-radius: 4px;
+    font-size: 1.2em;
+    padding: 0.1em 1em;
+    margin: 0.2em 0 0 0;
+    display: inline-block;
+}
+.state-block {
+    font-weight: bold;
+}
+.status-nosecret {
+    border: 1px solid rgb(220, 220, 220);
+    font-weight: bold;
+    text-align: center;
+    height: 10em;
+    display: table;
+    margin-bottom: 1em;
+    padding: 1em;
+}
+.status-nosecret > div {
+    vertical-align: middle;
+    display: table-cell;
+}
+
+/** Secret styles **/
+.secret-secret {
+    border: 1px solid rgb(220, 220, 220);
+    padding: 1em; 
+    margin-bottom: 1em;
+}
+textarea.secret-message {
+    transition: all 0 ease 0;
+}
+textarea.secret-message:focus {
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.secret-nosecret {
+    border: 1px solid rgb(220, 220, 220);
+    font-weight: bold;
+    text-align: center;
+    height: 10em;
+    display: table;
+    margin-bottom: 1em;
+    padding: 1em;
+}
+.secret-nosecret > div {
+    vertical-align: middle;
+    display: table-cell;
+}
+.secret-important {
+    font-weight: bold;
+    color: red;
+}
+.form-passphrase {
+    margin-bottom: 2em;
+}

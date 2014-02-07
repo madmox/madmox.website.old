@@ -8,11 +8,20 @@
     {% if secret %}
         <div class="status-secret">
             {% if secret_url %}
-                <p class="url-block">U.R.L. de votre secret : <span class="url-value">{{ secret_url }}</span></p>
+            <p class="url-block">U.R.L. de votre secret :</p>
+            <p class="url-value selectable">{{ secret_url }}</p>
+            <p class="url-notes">Copiez ce lien et envoyez-le à votre destinataire, si possible via un moyen suffisamment confidentiel pour qu'il soit la première personne à y avoir accès.</p>
+            <p class="url-notes"><strong>Attention</strong>, si vous quittez ou rafraichissez cette page sans copier le lien, il sera impossible de le récupérer et il faudra recréer un nouveau secret.</p>
+            {% else %}
+            <p class="url-block no-url">L'U.R.L. du message a déjà été visualisée et n'est plus disponible. Si vous l'avez perdue et que vous ne l'avez pas communiquée à votre destinataire, il n'y a aucun moyen de la récupérer. Il faut recréer un nouveau message.</p>
             {% endif %}
-            <p class="expiration-block">Votre secret expire dans <span class="expiration-value">{{ secret.expiration_date|days_until }}</span>. Il n'a pas encore été visualisé.</p>
+            <p class="expiration-block">Votre secret expire dans :</p>
+            <p class="expiration-value">{{ secret.expiration_date|days_until }}</p>
+            <p class="state-block">Il n'a pas encore été visualisé.</p>
         </div>
     {% else %}
-        <p class="status-nosecret">Aucun secret ne correspond à l'U.R.L. que vous avez demandée.</p>
+        <div class="status-nosecret">
+            <div>Aucun secret ne correspond à l'U.R.L. que vous avez demandée. Soit le lien est erroné, soit le secret a été récupéré par son destinataire, soit il a expiré.</div>
+        </div>
     {% endif %}
 {% endblock %}

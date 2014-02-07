@@ -4,18 +4,77 @@
 {% block description %}Page de création d'un secret à usage unique{% endblock %}
 
 {% block content_shatterynote %}
-    <p class="disclaimer">Entrez dans la boîte de texte ci-dessous un message, un mot de passe, ou tout autre secret à partager avec quelqu'un.</p>
     <form action="{% url 'shatterynote:index' %}" method="POST">{% csrf_token %}
         <div class="message">
+            <label for="id_message">Entrez dans la boîte de texte ci-dessous un message, un mot de passe, ou tout autre secret à partager avec quelqu'un<sup>(1)</sup></label>
             {{ form.message.errors }}
             {{ form.message }}
         </div>
         <div class="passphrase">
+            <label for="id_passphrase">Entrez une phrase secrète pour protéger votre message (facultatif)<sup>(2)</sup></label>
             {{ form.passphrase.errors }}
-            <label for="id_passphrase">Entrez une phrase secrète pour protéger votre message (facultatif) :</label>
             {{ form.passphrase }}
         </div>
         <input type="submit" value="Valider" />
     </form>
-    <p class="details">Comment ça fonctionne ?</p>
+    <ul class="annotations">
+        <li>(1) : Le message est limté à 25 000 caractères.</li>
+        <li>(2) : Le destinataire devra connaître cette phrase secrète pour afficher le message. 100 caractères maximum.</li>
+    </ul>
+    <div class="details">
+        <div>
+            <h2>Pour quoi faire ?</h2>
+            <p>Vous avez déjà voulu partager une information avec quelqu'un sans laisser de trace, par exemple, dans votre historique de conversation, dans les logs d'un serveur quelconque, ou sur votre téléphone (et celui de votre destinataire...) ? Cette application répond à ce besoin.</p>
+            <p>Les utilisations possibles sont variées :</p>
+            <ul>
+                <li>Vous êtes un administrateur système et vous souhaitez communiquer un mot de passe à un utilisateur sans risquer qu'il se fasse intercepter par un tier</li>
+                <li>Vous avez un message personnel à faire passer et vous ne tenez pas à ce que quelqu'un d'autre tombe dessus</li>
+                <li>Vous n'avez pas spécialement confiance dans l'intérêt que votre destinataire porte à la confidentialité de sa vie privée (sécurisation d'accès à l'ordinateur personnel, au téléphone, à l'historique mail ou navigation)</li>
+                <li>Vous n'avez pas envie de passer par un service tier d'une entreprise susceptible de collecter vos données</li>
+                <li>Vous trouvez le principe amusant...</li>
+            </ul>
+        </div>
+        <div>
+            <h2>Comment ça fonctionne ?</h2>
+            <p>Dans un premier temps, vous entrez votre message dans le formulaire présent sur cette page. Lorsque vous appuyez sur "valider", le message est alors envoyé sur le serveur qui héberge ce site et encrypté <strong>immédiatement</strong> avec une clé aléatoire<sup>(1)</sup> avant d'être sauvegardé en base de données. Le message n'est pas sauvegardé tout seul : au moment de l'enregistrement, un identifiant unique est généré, et la clé aléatoire est également stockée.</p>
+            <p>Une fois cette première étape effectuée, vous êtes redirigé sur une page de confirmation. Lors de cette redirection il se passe plusieurs choses :</p>
+            <ul>
+                <li>L'U.R.L. de cette page contient une donnée qui est en fait composée de 2 éléments :
+                    <ul>
+                        <li>L'identifiant crypté<sup>(2)</sup> du message que vous venez de créer. Il est encrypté pour éviter que n'importe qui puisse afficher des pages de confirmation au hasard et ainsi deviner les identifiants de messages existants pas encore visualisés.</li>
+                        <li>Une signature numérique permettant d'assurer que l'U.R.L. a bien été générée par le site<sup>(3)</sup>.</li>
+                    </ul>
+                </li>
+                <li>À partir de l'identifiant du message contenu dans l'U.R.L., le serveur est capable de retrouver la clé de cryptage générée précédemment (toujours contenue en base de données), et de la combiner avec l'identifiant du message pour générer le lien que vous allez communiquer à votre destinataire. De la même manière que celui de la page de confirmation, ce lien contient des informations :
+                    <ul>
+                        <li>À nouveau, l'identifiant du message (crypté, pour ne pas être lisible ou prédit par un tier)<sup>(2)</sup>.</li>
+                        <li>La clé de cryptage aléatoire utilisée pour encrypter le message en base de données (crypté également, pour des raisons plus évidentes)<sup>(2)</sup>.</li>
+                        <li>Une signature numérique permettant d'assurer que l'U.R.L. a bien été générée par le site<sup>(3)</sup>.</li>
+                    </ul>
+                </li>
+                <li>Une fois ce lien généré, la clé de cryptage du message est définitivement effacée de la base de données, ce qui implique que même les administrateurs du serveur ne peuvent plus lire le message. L'U.R.L. vous est alors affichée <strong>une et une seule fois</strong>, pour que vous puissiez la copier et la communiquer.</li>
+            </ul>
+            <p>Si vous visitez à nouveau la page de confirmation, l'U.R.L. du message ne sera plus disponible, il restera seulement des informations de suivi pour vérifier si votre message a été lu ou voir dans combien de temps il expire.</p>
+            <p>Lorsque votre destinataire entre l'U.R.L. que vous lui avez communiqué dans son navigateur, le serveur s'assure qu'elle est signée correctement, puis il décrypte les informations contenues dedans. Il récupère l'identifiant du message et la clé utilisée pour le crypter. Le message est alors décrypté, effacé définitivement de la base de données, et affiché au destinataire : c'est pour cette raison qu'on ne peut y accéder qu'<strong>une seule fois</strong>.</p>
+            <p>Au bout de 7 jours, si le message n'a pas été lu par votre destinataire, il est automatiquement effacé du serveur et ne peut plus être récupéré.</p>
+            <ul class="annotations">
+                <li>(1) : La clé aléatoire est une clé de 128 bits. La méthode de cryptage utilisée est AES-128 en mode CTR.</li>
+                <li>(2) : Cet encryptage est réalisé à l'aide d'une clé de 256 bits propre au serveur, en utilisant AES-256 en mode CTR.</li>
+                <li>(3) : La signature numérique est un HMAC-MD5 des données utiles de l'U.R.L., réalisé en combinant la clé AES du serveur et les données à signer.</li>
+            </ul>
+        </div>
+        <div>
+            <h2>Si tout est si sécurisé, quel est l'intérêt de protéger mon message avec un mot de passe ?</h2>
+            <p>Le mot de passe (ou phrase secrète) est un mécanisme de sécurité supplémentaire. Il sert à éviter qu'une personne ayant pu accéder à l'U.R.L. de votre message avant votre destinataire ne le récupère et ne le lise. Il convient donc de le transmettre d'une autre manière que vous avez transmis l'U.R.L. du message à votre destinataire.</p>
+            <p>Il peut donc être intéressant d'utiliser cette fonctionnalité si vous transmettez le lien par un medium public ou faiblement confidentiel, ou si vous pensez que le destinataire va mettre du temps à récupérer le message et qu'il est possible qu'un tier ait accès au lien entre-temps.</p>
+        </div>
+        <div>
+            <h2>En résumé</h2>
+            <ul>
+                <li>Votre message est stocké sur le serveur de façon complètement cryptée et indéchiffrable, même pour une personne ayant un accès physique au serveur.</li>
+                <li>Votre message n'est lisible que par une personne ayant accès au lien (et éventuellement au mot de passe) associé.</li>
+                <li>Votre message n'est lisible qu'une seule fois. Une personne réussissant à accéder au lien après votre destinataire (par exemple en utilisant son historique de navigation) ne verra rien du tout.</li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
