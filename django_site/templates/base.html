@@ -33,9 +33,14 @@
         </div>
         <div id="sidebar">
             <div id="accordion">
-                {% set_about_navigation request.path as nodes_about %}{% include 'navigation_node.html' with title='Accueil' nodes=nodes_about only %}
-                {% set_recipes_navigation request.path as nodes_recipes %}{% include 'navigation_node.html' with title='Recettes' nodes=nodes_recipes only %}
-                {% set_shatterynote_navigation request.path as nodes_shatterynote %}{% include 'navigation_node.html' with title='Shattery Note' nodes=nodes_shatterynote only %}
+                {% set_about_navigation request.path as nodes_about %}
+                {% include 'navigation_node.html' with title='Accueil' nodes=nodes_about pattern=about_index %}
+                
+                {% set_recipes_navigation request.path as nodes_recipes %}
+                {% include 'navigation_node.html' with title='Recettes' nodes=nodes_recipes pattern=recipes_index %}
+                
+                {% set_shatterynote_navigation request.path as nodes_shatterynote %}
+                {% include 'navigation_node.html' with title='Shattery Note' nodes=nodes_shatterynote pattern=shatterynote_index %}
             </div>
         </div>
         <div id="content">{% block content %}{% endblock %}</div>

@@ -1,5 +1,6 @@
+{% load core_navigation %}
 <h3>{{ title }}</h3>
-<ul>
+<ul class="{% nav_active request.path pattern %}">
 {% for node in nodes %}
     <li class="{% if node.active %}active{% endif %}"><a href="{{ node.url }}">{{ node.label }}</a></li>
 {% endfor %}
