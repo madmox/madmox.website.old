@@ -6,11 +6,7 @@ import base64
 
 from shatterynote.models import Secret
 from shatterynote.helpers import generate_aes_key
-
-
-def flip_bits(a):
-    """Flip all bits in the given byte string"""
-    return b''.join([int.to_bytes(x^255, 1, 'big') for x in a])
+from shatterynote.tests.common import flip_bits
 
 
 class SecretTests(TestCase):

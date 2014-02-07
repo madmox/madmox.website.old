@@ -74,31 +74,30 @@ def index(request):
     return render(request, 'shatterynote/index.html', {'form': form})
 
 
-def status(request, secret_id):
-    secret_id = pad_base64_string(secret_id)
+def status(request, base64_data):
+    base64_data = pad_base64_string(base64_data)
+    secret, secret_id, secret_url = None, None, None
     
     # Parses and validates URL infos
     try:
-        secret_id = Secret.objects.decrypt_id(secret_id)
+        secret_id = Secret.objects.decrypt_id(base64_data)
     except ValueError:
-        secret_id = None
-        secret = None
-        secret_url = None
+        # Invalid HMAC
+        pass
     
     # Gets secret if it exists
-    if secret_id:
+    if secret_id is not None:
         secret = get_object_or_none(Secret, pk=secret_id)
-        if secret:
+        if secret is not None:
             url_segment = secret.get_url_segment()
-            if url_segment:
+            if url_segment is not None:
                 # Strips equal signs from the string
                 url_segment = unpad_base64_string(url_segment)
-                relative_url = reverse('shatterynote:secret', args=(url_segment,))
+                relative_url = reverse(
+                    'shatterynote:secret',
+                    args=(url_segment,)
+                )
                 secret_url = request.build_absolute_uri(relative_url)
-            else:
-                secret_url = None
-        else:
-            secret_url = None
 
     return render(
         request, 'shatterynote/status.html',
@@ -106,57 +105,48 @@ def status(request, secret_id):
     )
 
 
-def secret(request, encrypted_data):
+def secret(request, base64_data):
     template = 'shatterynote/secret.html'
-    
-    encrypted_data = pad_base64_string(encrypted_data)
+    base64_data = pad_base64_string(base64_data)
+    found, form, message = False, None, None
     
     # Checks the secret exists
     try:
-        secret_id, secret_key = Secret.objects.unpack_infos(encrypted_data)
+        secret_id, secret_key = Secret.objects.unpack_infos(base64_data)
         secret = Secret.objects.get(pk=secret_id)
-    except Exception:
-        return render(
-            request, template,
-            {'form': None, 'message': None, 'found': False}
-        )
+        found = True
+    except (ValueError, Secret.DoesNotExist):
+        # Invalid HMAC or unknown secret ID
+        pass
     
-    if request.method == 'POST':
-        # The user submitted a passphrase for this secret
-        
-        # Maps submitted data to the form object
-        form = SubmitPassphraseForm(secret, request.POST)
-        
-        # Validates form data (checks passphrase...)
-        if form.is_valid():
-            # Passphrase is valid, the secret is now unciphered
-            return HttpResponseRedirect(request.get_full_path())
+    if found:
+        if request.method == 'POST':
+            # The user submitted a passphrase for this secret
+            
+            # Maps submitted data to the form object
+            form = SubmitPassphraseForm(secret, request.POST)
+            
+            # Validates form data (checks passphrase...)
+            if form.is_valid():
+                # Passphrase is valid, the secret is now unciphered
+                return HttpResponseRedirect(request.get_full_path())
+            else:
+                # Passphrase is invalid: the function returns the bound form
+                # which contains the error messages
+                pass
         else:
-            # Passphrase is invalid: the function returns the bound form
-            # which contains the error messages
-            pass
+            # The user is trying to view the secret
+            if secret.is_secure():
+                # The secret is secured: it will not be displayed,
+                # don't consume it
+                form = SubmitPassphraseForm(secret)
+            else:
+                # The secret is not secured: consume it!
+                message = secret.decrypt_message(secret_key)
+                secret.delete()
         
-        # Renders the secret's page, with error messages
-        return render(
-            request, template,
-            {'form': form, 'message': None, 'found': True}
-        )
-    else:
-        # The user is trying to view the secret
-        if secret.is_secure():
-            # The secret is secured: it will not be displayed,
-            # don't consume it
-            form = SubmitPassphraseForm(secret)
-            message = None
-        else:
-            # The secret is not secured: consume it!
-            form = None
-            message = secret.decrypt_message(secret_key)
-            secret.delete()
-        
-        # Renders the secret's page, be it with the message or with
-        # the passphrase form
-        return render(
-            request, template,
-            {'form': form, 'message': message, 'found': True}
-        )
+    # Renders the secret's page, with error messages
+    return render(
+        request, template,
+        {'form': form, 'message': message, 'found': found}
+    )

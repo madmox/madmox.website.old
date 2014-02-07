@@ -1,8 +1,13 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
+import base64
+
+from shatterynote import settings
+from shatterynote.helpers import AESEncryptor
 from shatterynote.models import Secret
 from shatterynote.views import unpad_base64_string, pad_base64_string
+from shatterynote.tests.common import flip_bits
 
 
 class IndexViewTests(TestCase):
@@ -131,13 +136,64 @@ class StatusViewTests(TestCase):
     def test_status_view_get_invalid(self):
         """
         Requests a status view on an invalid secret
-        Should return a HTTP 404 status code
+        Should return a context without secret
         """
         
         # Requests view
         self.secret_id = b'ABCD' + self.secret_id
         response = self.client.get(
             reverse('shatterynote:status', args=(self.secret_id,))
+        )
+        
+        # Asserts conditions
+        self.assertEqual(response.status_code, 200)
+        try:
+            secret = response.context['secret']
+            secret_url = response.context['secret_url']
+        except KeyError as ke:
+            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertIsNone(secret)
+        self.assertIsNone(secret_url)
+    
+    def test_status_view_get_fake_id(self):
+        """
+        Requests the view with a forged valid HMAC but invalid data, and
+        asserts the view returns a context without secret
+        """
+        
+        # Requests view
+        fake_id = self.secret.pk + 1
+        encrypted_data = Secret.objects.encrypt_id(fake_id)
+        url_segment = unpad_base64_string(encrypted_data)
+        response = response = self.client.get(
+            reverse('shatterynote:status', args=(url_segment,))
+        )
+        
+        # Asserts conditions
+        self.assertEqual(response.status_code, 200)
+        try:
+            secret = response.context['secret']
+            secret_url = response.context['secret_url']
+        except KeyError as ke:
+            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertIsNone(secret)
+        self.assertIsNone(secret_url)
+
+    def test_status_view_get_fake_invalid_format(self):
+        """
+        Requests the view with a forged valid HMAC but invalid data, and
+        asserts the view returns a context without secret
+        """
+        
+        # Requests view
+        invalid_data = b'\x00'
+        encryptor = AESEncryptor(settings.AES_KEY)
+        encrypted_data = encryptor.encrypt(invalid_data)
+        encrypted_data = encryptor.append_hmac(encrypted_data)
+        base64_id = base64.urlsafe_b64encode(encrypted_data)
+        url_segment = unpad_base64_string(base64_id)
+        response = response = self.client.get(
+            reverse('shatterynote:status', args=(url_segment,))
         )
         
         # Asserts conditions
@@ -241,6 +297,80 @@ class SecretViewTests(TestCase):
         self.assertFalse(found)
         self.assertEqual(len(secrets), 1)
         
+    def test_secret_view_get_fake_id(self):
+        """
+        Requests the view with a forged valid HMAC but invalid secret ID, and
+        asserts the view returns a context with found=False
+        """
+        
+        # Initializes data
+        secret = Secret.objects.create_secret('', 'message')
+        secret.save()
+        fake_id = secret.pk + 1
+        encrypted_data = Secret.objects.pack_infos(fake_id, secret.aes_key)
+        url_segment = unpad_base64_string(encrypted_data)
+        fake_url = reverse('shatterynote:secret', args=(url_segment,))
+        
+        # Requests
+        response = self.client.get(fake_url)
+        self.assertEqual(response.status_code, 200)
+        message, form, found = self.get_context_params(response.context)
+        
+        # Assertions
+        self.assertFalse(found)
+        self.assertIsNone(message)
+        self.assertIsNone(form)
+
+    def test_secret_view_get_fake_aes_key(self):
+        """
+        Requests the view with a forged valid HMAC but invalid AES key, and
+        asserts the view returns a context without message or wrong message
+        """
+        
+        # Initializes data
+        secret = Secret.objects.create_secret('', 'message')
+        secret.save()
+        fake_aes_key = flip_bits(secret.aes_key)
+        encrypted_data = Secret.objects.pack_infos(secret.pk, fake_aes_key)
+        url_segment = unpad_base64_string(encrypted_data)
+        fake_url = reverse('shatterynote:secret', args=(url_segment,))
+        
+        # Requests
+        response = self.client.get(fake_url)
+        self.assertEqual(response.status_code, 200)
+        message, form, found = self.get_context_params(response.context)
+        
+        # Assertions
+        self.assertTrue(found)
+        self.assertNotEqual(message, 'message')
+        self.assertIsNone(form)
+
+    def test_secret_view_get_fake_invalid_format(self):
+        """
+        Requests the view with a forged valid HMAC but invalid data format, and
+        asserts the view returns a context with found=False
+        """
+        
+        # Initializes data
+        invalid_data = b'\x00'
+        encryptor = AESEncryptor(settings.AES_KEY)
+        encrypted_data = encryptor.encrypt(invalid_data)
+        encrypted_data = encryptor.append_hmac(encrypted_data)
+        base64_id = base64.urlsafe_b64encode(encrypted_data)
+        url_segment = unpad_base64_string(base64_id)
+        fake_url = reverse('shatterynote:secret', args=(url_segment,))
+        
+        # Requests
+        response = self.client.get(fake_url)
+        self.assertEqual(response.status_code, 200)
+        message, form, found = self.get_context_params(response.context)
+        
+        # Assertions
+        self.assertFalse(found)
+        self.assertIsNone(message)
+        self.assertIsNone(form)
+
+
     def test_secret_view_post_not_secure(self):
         """
         Submits a passphrase for a secret which is not secure
@@ -324,7 +454,7 @@ class SecretViewTests(TestCase):
         self.assertTrue(found)
         self.assertFalse(form.is_valid())
         self.assertEqual(len(secrets), 1)
-        
+
     def test_secret_view_post_inexistant(self):
         """
         Requests an inexistant secret
