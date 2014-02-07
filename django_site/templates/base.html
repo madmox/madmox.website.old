@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 {% spaceless %}
-    {% load static from staticfiles %}
-    {% load core_navigation %}
-    {% load about_navigation %}
-    {% load recipes_navigation %}
-{% endspaceless %}
+{% load static from staticfiles %}
+{% load core_navigation %}
+{% load about_navigation %}
+{% load recipes_navigation %}
+{% load shatterynote_navigation %}
 <html lang="fr-FR">
     <head>
         <title>{% block title %}{% endblock %}</title>
         <meta charset="UTF-8">
         <meta name="keywords" content="{% block keywords %}{% endblock %}">
         <meta name="description" content="{% block description %}{% endblock %}">
+        <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
         <link href="{% static 'css/jquery-ui-1.10.4.custom.css' %}" media="all" rel="stylesheet" type="text/css">
         <link href="{% static 'css/main.css' %}" media="all" rel="stylesheet" type="text/css">
         <script src="{% static 'js/jquery-2.0.3.js' %}"></script>
@@ -24,19 +25,21 @@
             <ul id="header-nav">
                 {% url 'about:index' as about_index %}
                 {% url 'recipes:index' as recipes_index %}
-                <li class="{% nav_active request.path about_index %}"><a href="{{ about_index }}">ACCUEIL</a></li><!--
-                --><li class="{% nav_active request.path recipes_index %}"><a href="{{ recipes_index }}">RECETTES</a></li>
+                {% url 'shatterynote:index' as shatterynote_index %}
+                <li class="{% nav_active request.path about_index %}"><a href="{{ about_index }}">ACCUEIL</a></li>
+                <li class="{% nav_active request.path recipes_index %}"><a href="{{ recipes_index }}">RECETTES</a></li>
+                <li class="{% nav_active request.path shatterynote_index %}"><a href="{{ shatterynote_index }}">SHATTERY NOTE</a></li>
             </ul>
         </div>
         <div id="sidebar">
             <div id="accordion">
                 {% set_about_navigation request.path as nodes_about %}{% include 'navigation_node.html' with title='Accueil' nodes=nodes_about only %}
                 {% set_recipes_navigation request.path as nodes_recipes %}{% include 'navigation_node.html' with title='Recettes' nodes=nodes_recipes only %}
+                {% set_shatterynote_navigation request.path as nodes_shatterynote %}{% include 'navigation_node.html' with title='Shattery Note' nodes=nodes_shatterynote only %}
             </div>
-        </div><!--
-        --><div id="content">{% block content %}{% endblock %}</div>
-        <div id="footer">
-            Copyright &copy; 2013-{% now "Y" %} Maxime ROSSINI
         </div>
+        <div id="content">{% block content %}{% endblock %}</div>
+        <div id="footer">Copyright &copy; 2013-{% now "Y" %} Maxime ROSSINI</div>
     </body>
 </html>
+{% endspaceless %}
