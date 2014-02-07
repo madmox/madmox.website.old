@@ -27,7 +27,16 @@ class SubmitPassphraseForm(forms.Form):
     the secret's creator set a passphrase for it
     """
     
-    passphrase = forms.CharField(max_length=100, required=False)
+    passphrase = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder':
+                "Le mot de passe ou la phrase secrète que vous a communiqué l'émetteur du lien"
+            }
+        )
+    )
     
     def __init__(self, secret, *args, **kwargs):
         super().__init__(*args, **kwargs)
