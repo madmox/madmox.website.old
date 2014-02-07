@@ -148,7 +148,7 @@ class AESEncryptorTests(TestCase):
                 "Could not append HMAC to ciphered data: {0}".format(str(e))
             )
         
-        self.assertEqual(len(ciphered_final), len(ciphered)+32)
+        self.assertEqual(len(ciphered_final), len(ciphered)+16)
 
     def test_helpers_aesencryptor_append_hmac_memoryview(self):
         """
@@ -162,7 +162,7 @@ class AESEncryptorTests(TestCase):
                 "Could not append HMAC to ciphered data: {0}".format(str(e))
             )
         
-        self.assertEqual(len(ciphered_final), len(ciphered)+32)
+        self.assertEqual(len(ciphered_final), len(ciphered)+16)
 
     def test_helpers_aesencryptor_validate_hmac_valid_bytes(self):
         """

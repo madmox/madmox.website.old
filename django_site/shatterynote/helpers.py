@@ -1,10 +1,14 @@
 from Crypto.Cipher import AES
-from Crypto.Hash import SHA256, HMAC
+from Crypto.Hash import SHA256, MD5, HMAC
 from Crypto.Random import get_random_bytes
 from Crypto.Util import Counter
 
 
 def hash_passphrase(passphrase, salt_size=16, salt=None):
+    """
+    Hashes a passphrase (using SHA-256 hash function) and returns
+    salt+digest to the caller
+    """
     if salt is None:
         salt = get_random_bytes(salt_size)
     bytes_passphrase = passphrase.encode('utf8')
@@ -14,6 +18,10 @@ def hash_passphrase(passphrase, salt_size=16, salt=None):
 
 
 def validate_passphrase(passphrase, passphrase_hash, salt_size=16):
+    """
+    Hashes the given passphrase, using the salt included in the given
+    reference hash, and asserts it matches the reference.
+    """
     
     # Python memoryview inconsistency arround the '+' operator:
     # b'x' + memoryview(b'x') is OK but memoryview(b'x') + b'x' is not...
@@ -105,7 +113,7 @@ class AESEncryptor:
     
     def append_hmac(self, ciphered_data):
         """
-        Appends the HMAC-SHA256 at the end of ciphered_data with the
+        Appends the HMAC-MD5 at the end of ciphered_data with the
         internal encryptor's AES key
         """
         
@@ -115,22 +123,22 @@ class AESEncryptor:
         if isinstance(ciphered_data, memoryview):
             ciphered_data = bytes(ciphered_data)
         
-        h = HMAC.new(self.key, digestmod=SHA256)
+        h = HMAC.new(self.key, digestmod=MD5)
         h.update(ciphered_data)
         return ciphered_data + h.digest()
     
     def validate_hmac(self, ciphered_data):
         """
-        Validates the HMAC-SHA256 at the end of ciphered_data with the
+        Validates the HMAC-MD5 at the end of ciphered_data with the
         internal encryptor's AES key
         """
-        if len(ciphered_data) < 32:
-            raise ValueError("ciphered_data should contain at least 32 bytes")
+        if len(ciphered_data) < 16:
+            raise ValueError("ciphered_data should contain at least 16 bytes")
         
-        h = HMAC.new(self.key, digestmod=SHA256)
-        h.update(ciphered_data[:-32])
+        h = HMAC.new(self.key, digestmod=MD5)
+        h.update(ciphered_data[:-16])
         hmac = h.digest()
-        if hmac != ciphered_data[-32:]:
+        if hmac != ciphered_data[-16:]:
             raise ValueError("HMAC is invalid, could not authenticate the data")
         
-        return ciphered_data[:-32]
+        return ciphered_data[:-16]

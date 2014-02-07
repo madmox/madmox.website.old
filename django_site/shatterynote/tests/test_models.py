@@ -161,9 +161,9 @@ class SecretManagerTests(TestCase):
         # - 16 bytes for the AES-CTR nonce
         # - 4 bytes for the secret ID
         # - 16 bytes for the AES-128 key
-        # - 32 bytes for the HMAC-SHA256
+        # - 16 bytes for the HMAC-MD5
         encrypted_data = base64.urlsafe_b64decode(base64_data)
-        self.assertEqual(len(encrypted_data), (16+4+16+32))
+        self.assertEqual(len(encrypted_data), (16+4+16+16))
         
         id, key = Secret.objects.unpack_infos(base64_data)
         
