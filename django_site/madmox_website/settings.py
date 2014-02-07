@@ -20,6 +20,10 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = os.environ['DJANGO_ALLOWED_HOSTS'].split()
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
+# Piwik is the trafic monitoring tool of the site, it should be enabled in
+# production only
+ENABLE_PIWIK = (os.environ.get('DJANGO_ENABLE_PIWIK') != None)
+
 # Application definition
 
 DEFAULT_APPS = (
@@ -56,6 +60,7 @@ MIDDLEWARE_CLASSES = (
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     "django.core.context_processors.request",
+    "core.context_processors.piwik",
 )
 
 ROOT_URLCONF = 'madmox_website.urls'

@@ -45,6 +45,7 @@
         </div>
         <div id="content">{% block content %}{% endblock %}</div>
         <div id="footer">Copyright &copy; 2013-{% now "Y" %} Maxime ROSSINI</div>
+        {% if piwik_enabled %}{% include 'piwik.html' %}{% endif %}
     </body>
 </html>
 {% endspaceless %}
