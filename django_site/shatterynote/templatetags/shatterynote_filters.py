@@ -12,8 +12,8 @@ def pluralize(value, plural_mark='s'):
 @register.filter
 def days_until(value):
     delta = value - timezone.now()
-    days = delta.days
-    hours = delta.seconds // 3600
+    days = delta.days if delta.days >= 0 else 0
+    hours = delta.seconds // 3600 if delta.seconds >= 0 else 0
     
     if days > 0 and hours == 0:
         result = '{0} jour{1}'.format(days, pluralize(days))
