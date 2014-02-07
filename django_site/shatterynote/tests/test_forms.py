@@ -28,7 +28,7 @@ class NewSecretFormTests(TestCase):
         Asserts the form rejects an invalid message
         """
         form = NewSecretForm(
-            {'passphrase': 'passphrase', 'message': 'X'*6000}
+            {'passphrase': 'passphrase', 'message': 'X'*100000}
         )
         self.assertFalse(form.is_valid())
 
