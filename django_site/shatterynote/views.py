@@ -88,12 +88,15 @@ def status(request, secret_id):
     # Gets secret if it exists
     if secret_id:
         secret = get_object_or_none(Secret, pk=secret_id)
-        url_segment = secret.get_url_segment()
-        if url_segment:
-            # Strips equal signs from the string
-            url_segment = unpad_base64_string(url_segment)
-            relative_url = reverse('shatterynote:secret', args=(url_segment,))
-            secret_url = request.build_absolute_uri(relative_url)
+        if secret:
+            url_segment = secret.get_url_segment()
+            if url_segment:
+                # Strips equal signs from the string
+                url_segment = unpad_base64_string(url_segment)
+                relative_url = reverse('shatterynote:secret', args=(url_segment,))
+                secret_url = request.build_absolute_uri(relative_url)
+            else:
+                secret_url = None
         else:
             secret_url = None
 
