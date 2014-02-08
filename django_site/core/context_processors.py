@@ -1,4 +1,4 @@
-from madmox_website import settings
+from core import settings
 
 
 def piwik(request):

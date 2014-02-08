@@ -20,10 +20,6 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = os.environ['DJANGO_ALLOWED_HOSTS'].split()
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
-# Piwik is the trafic monitoring tool of the site, it should be enabled in
-# production only
-ENABLE_PIWIK = (os.environ.get('DJANGO_ENABLE_PIWIK') != None)
-
 # Application definition
 
 DEFAULT_APPS = (
