@@ -62,3 +62,4 @@ h2.recipes-title { margin: 0 0 0.5em 0; color: rgb(255, 150, 100); }
 .recipes-tools {  margin: 0 2% 1em 0; }
 .recipes-ingredients {  margin: 0 0 1em 0; }
 .recipes-data img { position: absolute; top: 1em; left: 35em;}
+.recipes-steps .recipes-list li { margin-bottom: 0.5em; }
