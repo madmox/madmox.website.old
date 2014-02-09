@@ -38,7 +38,9 @@ class CategoryViewTests(TestCase):
         """
         Tests the view returns a 404 HTTP status code if an unknown ID is given
         """
-        response = self.client.get(reverse('recipes:category', args=(0,)))
+        response = self.client.get(
+            reverse('recipes:category', args=('unknown-slug',))
+        )
         self.assertEqual(response.status_code, 404)
         
     def test_category_view_exists(self):
@@ -47,7 +49,7 @@ class CategoryViewTests(TestCase):
         """
         category = create_category('Nouvelle catégorie', 1)
         response = self.client.get(
-            reverse('recipes:category', args=(category.pk,))
+            reverse('recipes:category', args=(category.slug,))
         )
         self.assertEqual(response.status_code, 200)
         
@@ -59,7 +61,7 @@ class CategoryViewTests(TestCase):
         category2 = create_category('Nouvelle catégorie 2', 2)
         recipe1 = create_recipe('Recipe 1', category1)
         response = self.client.get(
-            reverse('recipes:category', args=(category1.pk,))
+            reverse('recipes:category', args=(category1.slug,))
         )
         self.assertContains(response, recipe1.name, status_code=200)
         
@@ -71,7 +73,7 @@ class CategoryViewTests(TestCase):
         category2 = create_category('Nouvelle catégorie 2', 2)
         recipe1 = create_recipe('Recipe 1', category1)
         response = self.client.get(
-            reverse('recipes:category', args=(category2.pk,))
+            reverse('recipes:category', args=(category2.slug,))
         )
         self.assertNotContains(response, recipe1.name, status_code=200)
 
@@ -81,7 +83,9 @@ class DetailViewTests(TestCase):
         """
         Tests the view returns a 404 HTTP status code if an unknown ID is given
         """
-        response = self.client.get(reverse('recipes:detail', args=(0,)))
+        response = self.client.get(
+            reverse('recipes:detail', args=('unknown-slug',))
+        )
         self.assertEqual(response.status_code, 404)
         
     def test_category_view_exists(self):
@@ -91,7 +95,7 @@ class DetailViewTests(TestCase):
         category = create_category('Nouvelle catégorie', 1)
         recipe = create_recipe('Recette', category)
         response = self.client.get(
-            reverse('recipes:detail', args=(recipe.pk,))
+            reverse('recipes:detail', args=(recipe.slug,))
         )
         self.assertContains(response, recipe.name, status_code=200)
 
@@ -105,7 +109,7 @@ class RecipesNavigationTests(TestCase):
         )
 
     def test_set_recipes_navigation(self):
-        url = reverse('recipes:category', args=(self.category.pk,))
+        url = reverse('recipes:category', args=(self.category.slug,))
         c = Context({"current_path": url})
         rendered = self.template.render(c)
         self.assertIsInstance(c['results'], list)

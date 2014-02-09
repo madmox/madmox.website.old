@@ -2,6 +2,10 @@ from django.contrib import admin
 from recipes.models import Category, Recipe, Tool, Ingredient, Step
 
 
+class CategoryAdmin(admin.ModelAdmin):
+    exclude = ('slug',)
+
+
 class ToolInline(admin.TabularInline):
     model = Tool
     extra = 1
@@ -22,7 +26,8 @@ class StepInline(admin.TabularInline):
     
 class RecipeAdmin(admin.ModelAdmin):
     inlines = [ToolInline, IngredientInline, StepInline]
+    exclude = ('slug',)
 
     
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Recipe, RecipeAdmin)

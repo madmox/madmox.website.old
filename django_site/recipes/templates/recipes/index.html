@@ -8,7 +8,7 @@
     <h1 class="recipes-title">Rechercher par catégorie</h1>
     <ul class="recipes-categories">
         {% spaceless %}{% for category in categories %}
-            <a href="{% url 'recipes:category' category.pk %}">
+            <a href="{% url 'recipes:category' category.slug %}">
                 <li>
                     {% if category.image %}
                         <img src="{{ category.image.url }}" alt="{{ category.name }}" width="150" height="100">

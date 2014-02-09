@@ -16,11 +16,11 @@ def set_recipes_navigation(context, current_path):
     current_recipe = context.get('recipe', None)
     
     for category in categories:
-        url = reverse('recipes:category', args=(category.id,))
+        url = reverse('recipes:category', args=(category.slug,))
         label = category.name
         active = (current_path == url) or (
             current_recipe != None and (
-                current_recipe.category.id == category.id
+                current_recipe.category.pk == category.pk
             )
         )
         results.append(NavigationNode(active, url, label))
