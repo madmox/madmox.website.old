@@ -2,15 +2,15 @@ from django.test import TestCase
 import os
 
 
-def test_environment_key(key):
-    try:
-        key = 'DJANGO_SETTINGS_MODULE'
-        os.environ[key]
-    except:
-        self.fail('Missing environment key {0}'.format(key))
-
-
 class SettingsTests(TestCase):
+
+    def test_environment_key(self, key):
+        try:
+            key = 'DJANGO_SETTINGS_MODULE'
+            os.environ[key]
+        except:
+            self.fail('Missing environment key {0}'.format(key))
+
     def test_settings(self):
         """
         Asserts required settings are defined
