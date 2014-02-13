@@ -3,7 +3,7 @@ from recipes.models import Category, Recipe, Tool, Ingredient, Step
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    exclude = ('slug',)
+    pass
 
 
 class ToolInline(admin.TabularInline):
@@ -26,7 +26,6 @@ class StepInline(admin.TabularInline):
     
 class RecipeAdmin(admin.ModelAdmin):
     inlines = [ToolInline, IngredientInline, StepInline]
-    exclude = ('slug',)
 
     
 admin.site.register(Category, CategoryAdmin)

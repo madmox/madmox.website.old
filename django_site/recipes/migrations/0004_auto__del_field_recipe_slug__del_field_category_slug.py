@@ -2,41 +2,29 @@
 from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
-from django.db import models, transaction
+from django.db import models
 
 
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Category.slug'
-        db.add_column('recipes_category', 'slug',
-                      self.gf('django.db.models.fields.SlugField')(default='', max_length=50, blank=True),
-                      keep_default=False)
+        # Deleting field 'Recipe.slug'
+        db.delete_column('recipes_recipe', 'slug')
 
-        # Fills default slug field for categories
-        with transaction.atomic():
-            categories_noslug = orm.Category.objects.select_for_update().filter(slug__exact='')
-            for category in categories_noslug:
-                category.save()
-
-        # Adding field 'Recipe.slug'
-        db.add_column('recipes_recipe', 'slug',
-                      self.gf('django.db.models.fields.SlugField')(default='', max_length=50, blank=True),
-                      keep_default=False)
-
-        # Fills default slug field for recipes
-        with transaction.atomic():
-            recipes_noslug = orm.Recipe.objects.select_for_update().filter(slug__exact='')
-            for recipe in recipes_noslug:
-                recipe.save()
-        
-
-    def backwards(self, orm):
         # Deleting field 'Category.slug'
         db.delete_column('recipes_category', 'slug')
 
-        # Deleting field 'Recipe.slug'
-        db.delete_column('recipes_recipe', 'slug')
+
+    def backwards(self, orm):
+        # Adding field 'Recipe.slug'
+        db.add_column('recipes_recipe', 'slug',
+                      self.gf('django.db.models.fields.SlugField')(default='', unique=True, max_length=50, blank=True),
+                      keep_default=False)
+
+        # Adding field 'Category.slug'
+        db.add_column('recipes_category', 'slug',
+                      self.gf('django.db.models.fields.SlugField')(default='', unique=True, max_length=50, blank=True),
+                      keep_default=False)
 
 
     models = {
@@ -47,7 +35,6 @@ class Migration(SchemaMigration):
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'order': ('django.db.models.fields.IntegerField', [], {'unique': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
         },
         'recipes.ingredient': {
@@ -66,7 +53,6 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'nb_persons': ('django.db.models.fields.IntegerField', [], {}),
             'preparation_time': ('django.db.models.fields.IntegerField', [], {}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50', 'blank': 'True'}),
             'total_time': ('django.db.models.fields.IntegerField', [], {}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
         },

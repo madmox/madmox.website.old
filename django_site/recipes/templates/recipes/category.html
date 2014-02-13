@@ -8,7 +8,7 @@
     <h1 class="recipes-title">{{ category.name }}</h1>
     <ul class="recipes-recipes">
         {% spaceless %}{% for recipe in category.ordered_recipes %}
-            <a href="{% url 'recipes:detail' recipe.slug %}">
+            <a href="{% url 'recipes:detail' recipe.pk recipe.slug %}">
                 <li>
                     {% if recipe.image %}
                         <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" width="90" height="60">

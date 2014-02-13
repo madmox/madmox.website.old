@@ -16,7 +16,7 @@ def set_recipes_navigation(context, current_path):
     current_recipe = context.get('recipe', None)
     
     for category in categories:
-        url = reverse('recipes:category', args=(category.slug,))
+        url = reverse('recipes:category', args=(category.pk, category.slug,))
         label = category.name
         active = (current_path == url) or (
             current_recipe != None and (

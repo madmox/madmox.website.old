@@ -5,6 +5,7 @@ from recipes.tests.common import *
 
 
 class IndexViewTests(TestCase):
+
     def test_index_view(self):
         """
         Tests the view returns a 200 HTTP code
@@ -28,20 +29,40 @@ class IndexViewTests(TestCase):
         response = self.client.get(reverse('recipes:index'))
         self.assertQuerysetEqual(
             response.context['categories'],
-            [category.__repr__()]
+            [repr(category)]
         )
         self.assertContains(response, category.name, status_code=200)
 
 
 class CategoryViewTests(TestCase):
+
     def test_category_view_404(self):
         """
         Tests the view returns a 404 HTTP status code if an unknown ID is given
         """
         response = self.client.get(
-            reverse('recipes:category', args=('unknown-slug',))
+            reverse('recipes:category', args=(1, 'wrong-slug',))
         )
         self.assertEqual(response.status_code, 404)
+        
+    def test_category_view_wrong_slug(self):
+        """
+        Tests the view returns a redirect status code if valid ID is given
+        but wrong slug
+        """
+        category = create_category('Nouvelle catégorie', 1)
+        response = self.client.get(
+            reverse('recipes:category', args=(category.pk, 'wrong-slug',)),
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.redirect_chain)
+        self.assertEqual(len(response.redirect_chain), 1)
+        try:
+            ctx_category = response.context['category']
+        except KeyError as ke:
+            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertEqual(category, ctx_category)
         
     def test_category_view_exists(self):
         """
@@ -49,9 +70,14 @@ class CategoryViewTests(TestCase):
         """
         category = create_category('Nouvelle catégorie', 1)
         response = self.client.get(
-            reverse('recipes:category', args=(category.slug,))
+            reverse('recipes:category', args=(category.pk, category.slug,))
         )
         self.assertEqual(response.status_code, 200)
+        try:
+            ctx_category = response.context['category']
+        except KeyError as ke:
+            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertEqual(category, ctx_category)
         
     def test_category_view_with_recipe(self):
         """
@@ -61,7 +87,7 @@ class CategoryViewTests(TestCase):
         category2 = create_category('Nouvelle catégorie 2', 2)
         recipe1 = create_recipe('Recipe 1', category1)
         response = self.client.get(
-            reverse('recipes:category', args=(category1.slug,))
+            reverse('recipes:category', args=(category1.pk, category1.slug,))
         )
         self.assertContains(response, recipe1.name, status_code=200)
         
@@ -73,31 +99,57 @@ class CategoryViewTests(TestCase):
         category2 = create_category('Nouvelle catégorie 2', 2)
         recipe1 = create_recipe('Recipe 1', category1)
         response = self.client.get(
-            reverse('recipes:category', args=(category2.slug,))
+            reverse('recipes:category', args=(category2.pk, category2.slug,))
         )
         self.assertNotContains(response, recipe1.name, status_code=200)
 
 
 class DetailViewTests(TestCase):
+
     def test_recipe_view_404(self):
         """
         Tests the view returns a 404 HTTP status code if an unknown ID is given
         """
         response = self.client.get(
-            reverse('recipes:detail', args=('unknown-slug',))
+            reverse('recipes:detail', args=(1, 'unknown-slug',))
         )
         self.assertEqual(response.status_code, 404)
         
-    def test_category_view_exists(self):
+    def test_recipe_view_wrong_slug(self):
+        """
+        Tests the view returns a redirect status code if valid ID is given
+        but wrong slug
+        """
+        category = create_category('Nouvelle catégorie', 1)
+        recipe = create_recipe('Recette', category)
+        response = self.client.get(
+            reverse('recipes:detail', args=(recipe.pk, 'wrong-slug',)),
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.redirect_chain)
+        self.assertEqual(len(response.redirect_chain), 1)
+        try:
+            ctx_recipe = response.context['recipe']
+        except KeyError as ke:
+            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertEqual(recipe, ctx_recipe)
+        
+    def test_recipe_view_exists(self):
         """
         Tests the view returns a 200 HTTP status code if a good ID is given
         """
         category = create_category('Nouvelle catégorie', 1)
         recipe = create_recipe('Recette', category)
         response = self.client.get(
-            reverse('recipes:detail', args=(recipe.slug,))
+            reverse('recipes:detail', args=(recipe.pk, recipe.slug,))
         )
         self.assertContains(response, recipe.name, status_code=200)
+        try:
+            ctx_recipe = response.context['recipe']
+        except KeyError as ke:
+            self.fail("context does not contain key {0}".format(str(ke)))
+        self.assertEqual(recipe, ctx_recipe)
 
 
 class RecipesNavigationTests(TestCase):
@@ -109,7 +161,10 @@ class RecipesNavigationTests(TestCase):
         )
 
     def test_set_recipes_navigation(self):
-        url = reverse('recipes:category', args=(self.category.slug,))
+        url = reverse(
+            'recipes:category',
+            args=(self.category.pk, self.category.slug,)
+        )
         c = Context({"current_path": url})
         rendered = self.template.render(c)
         self.assertIsInstance(c['results'], list)

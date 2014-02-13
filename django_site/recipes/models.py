@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-from core.tools import unique_slugify
+from django.template.defaultfilters import slugify
 
 
 # Models
@@ -11,7 +11,6 @@ class Category(models.Model):
     """
     
     name = models.CharField(max_length=50, verbose_name="nom")
-    slug = models.SlugField(max_length=50, blank=True, unique=True)
     order = models.IntegerField(
         validators=[MinValueValidator(0)],
         unique=True,
@@ -31,15 +30,15 @@ class Category(models.Model):
         verbose_name="date de mise à jour"
     )
     
+    @property
+    def slug(self):
+        return slugify(self.name)
+    
     class Meta():
         verbose_name = "catégorie"
     
     def __str__(self):
         return self.name
-    
-    def save(self, *args, **kwargs):
-        unique_slugify(self, self.name)
-        super().save(*args, **kwargs)
     
     def ordered_recipes(self):
         return self.recipe_set.all().order_by('name')
@@ -51,7 +50,6 @@ class Recipe(models.Model):
     """
     
     name = models.CharField(max_length=50, verbose_name="nom")
-    slug = models.SlugField(max_length=50, blank=True, unique=True)
     category = models.ForeignKey(Category, verbose_name="catégorie")
     nb_persons = models.IntegerField(
         validators=[MinValueValidator(1)],
@@ -79,15 +77,15 @@ class Recipe(models.Model):
         verbose_name="date de mise à jour"
     )
     
+    @property
+    def slug(self):
+        return slugify(self.name)
+    
     class Meta():
         verbose_name = "recette"
     
     def __str__(self):
         return self.name
-    
-    def save(self, *args, **kwargs):
-        unique_slugify(self, self.name)
-        super().save(*args, **kwargs)
     
     def ordered_tools(self):
         return self.tool_set.all().order_by('order')
