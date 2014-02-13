@@ -4,9 +4,8 @@ import os
 
 class SettingsTests(TestCase):
 
-    def test_environment_key(self, key):
+    def check_environment_key(self, key):
         try:
-            key = 'DJANGO_SETTINGS_MODULE'
             os.environ[key]
         except:
             self.fail('Missing environment key {0}'.format(key))
@@ -15,9 +14,9 @@ class SettingsTests(TestCase):
         """
         Asserts required settings are defined
         """
-        test_environment_key('DJANGO_SETTINGS_MODULE')
-        test_environment_key('DJANGO_SECRET_KEY')
-        test_environment_key('DJANGO_ALLOWED_HOSTS')
-        test_environment_key('DJANGO_DATABASE_NAME')
-        test_environment_key('DJANGO_MEDIA_ROOT')
-        test_environment_key('DJANGO_AES_KEY')
+        self.check_environment_key('DJANGO_SETTINGS_MODULE')
+        self.check_environment_key('DJANGO_SECRET_KEY')
+        self.check_environment_key('DJANGO_ALLOWED_HOSTS')
+        self.check_environment_key('DJANGO_DATABASE_NAME')
+        self.check_environment_key('DJANGO_MEDIA_ROOT')
+        self.check_environment_key('DJANGO_AES_KEY')
