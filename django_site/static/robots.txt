@@ -1,2 +1,4 @@
 User-Agent: *
 Disallow: /admin/
+Disallow: /shatterynote/status/
+Disallow: /shatterynote/secret/

@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
+from django.views.decorators.cache import cache_control
 
 from shatterynote import settings
 from shatterynote.models import Secret
@@ -74,6 +75,7 @@ def index(request):
     return render(request, 'shatterynote/index.html', {'form': form})
 
 
+@cache_control(no_cache=True, no_store=True, must_revalidate=True)
 def status(request, base64_data):
     base64_data = pad_base64_string(base64_data)
     secret, secret_id, secret_url = None, None, None
@@ -105,6 +107,7 @@ def status(request, base64_data):
     )
 
 
+@cache_control(no_cache=True, no_store=True, must_revalidate=True)
 def secret(request, base64_data):
     template = 'shatterynote/secret.html'
     base64_data = pad_base64_string(base64_data)
