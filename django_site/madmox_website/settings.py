@@ -8,16 +8,19 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+from core.tools import get_env_var
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # General settings
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
-DEBUG = (os.environ.get('DJANGO_DEBUG') != None)
+SECRET_KEY = get_env_var('DJANGO_SECRET_KEY', required=False, default='')
+DEBUG = (get_env_var('DJANGO_DEBUG', required=False) != None)
 TEMPLATE_DEBUG = True
-ALLOWED_HOSTS = os.environ['DJANGO_ALLOWED_HOSTS'].split()
+ALLOWED_HOSTS = get_env_var('DJANGO_ALLOWED_HOSTS').split()
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 
 # Application definition
@@ -53,7 +56,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     "django.core.context_processors.request",
     "core.context_processors.piwik",
@@ -69,9 +71,13 @@ WSGI_APPLICATION = 'madmox_website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DJANGO_DATABASE_NAME'],
-        'USER': os.environ.get('DJANGO_DATABASE_USER', ''),
-        'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', ''),
+        'NAME': get_env_var('DJANGO_DATABASE_NAME'),
+        'USER': get_env_var(
+            'DJANGO_DATABASE_USER', required=False, default=''
+        ),
+        'PASSWORD': get_env_var(
+            'DJANGO_DATABASE_PASSWORD', required=False, default=''
+        ),
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -89,13 +95,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-if not DEBUG:
-    STATIC_ROOT = os.environ['DJANGO_STATIC_ROOT']
+STATIC_ROOT = get_env_var('DJANGO_STATIC_ROOT', required=False)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
 # User-uploaded files
-MEDIA_ROOT = os.environ['DJANGO_MEDIA_ROOT']
+MEDIA_ROOT = get_env_var('DJANGO_MEDIA_ROOT')
 MEDIA_URL = '/media/'

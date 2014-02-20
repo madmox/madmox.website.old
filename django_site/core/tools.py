@@ -1,4 +1,22 @@
 import os
+from django.core.exceptions import ImproperlyConfigured
+
+
+def get_env_var(key, required=True, default=None):
+    """
+    Gets the setting corresponding to the given key and returns it.
+    
+    If the matching environment is not defined and the setting is marked
+    as required, raises an ImproperlyConfigured exception.
+    
+    """
+    if required:
+        try:
+            return os.environ[key]
+        except KeyError:
+            raise ImproperlyConfigured("Missing setting '{0}'".format(key))
+    else:
+        return os.environ.get(key, default)
 
 
 def set_env_vars(projdir, envdir='envdir'):
