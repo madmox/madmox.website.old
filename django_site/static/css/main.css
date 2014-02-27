@@ -16,7 +16,7 @@ p {
     position: relative;
 }
 
-#header-title {
+.header-title {
     line-height: 1em;
     font-size: 2em;
     color: white;
@@ -26,7 +26,7 @@ p {
 
 #header nav { display: inline-block; }
 
-#header-nav {
+.header-nav {
     height: 2.5em;
     line-height: 2.5em;
     display: inline-block;
@@ -34,40 +34,46 @@ p {
     vertical-align: middle;
 }
 
-#header-nav li {
+.header-nav li {
     display: inline-block;
     background-color: rgb(32, 80, 129);
 }
 
-#header-nav li:hover {
+.header-nav li:hover {
     background-color: rgb(70, 110, 150);
 }
 
-#header-nav li.active {
+.header-nav li.active {
     background-color: rgb(255, 255, 255);
 }
 
-#header-nav a {
+.header-nav a {
     display: block;
-    color: white;
     height: 100%;
+    color: white;
     padding: 0 10px;
     text-decoration: none;
-    font-size: 1.3em;
+    font-size: 1.2em;
 }
 
-#header-nav li.active a {
+.header-nav li.active a {
     color: rgb(32, 80, 129);
 }
 
-#header-nav a:hover {
+.header-nav a:hover {
     text-decoration: underline;
 }
 
-#header-nav .user-management  {
+.user-management  {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.header-nav .username {
+    color: white;
+    font-size: 0.8em;
+    line-height: 0.8em;
 }
 
 #sidebar {
