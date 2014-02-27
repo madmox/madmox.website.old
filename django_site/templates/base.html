@@ -29,6 +29,11 @@
                     
                     {% url 'shatterynote:index' as shatterynote_index %}
                     <li class="{% nav_active request.path shatterynote_index %}"><a href="{{ shatterynote_index }}">SHATTERY NOTE</a></li>
+                    
+                    {% if request.user.is_staff %}
+                        {% url 'admin:index' as admin_index %}
+                        <li class="{% nav_active request.path admin_index %}"><a href="{{ admin_index }}">ADMIN</a></li>
+                    {% endif %}
                 </ul>
                 <ul class="header-nav user-management">
                     {% if request.user.is_authenticated %}
