@@ -14,24 +14,33 @@
         <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
         <link href="{% static 'css/jquery-ui-1.10.4.custom.css' %}" media="all" rel="stylesheet" type="text/css">
         <link href="{% static 'css/main.css' %}" media="all" rel="stylesheet" type="text/css">
-        <script src="{% static 'js/jquery-2.0.3.js' %}"></script>
-        <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
-        <script src="{% static 'js/main.js' %}"></script>
         {% block additional_page_head %}{% endblock %}
     </head>
     <body>
-        <div id="header">
+        <header id="header">
             <div id="header-title">www.madmox.fr</div>
-            <ul id="header-nav">
-                {% url 'about:index' as about_index %}
-                {% url 'recipes:index' as recipes_index %}
-                {% url 'shatterynote:index' as shatterynote_index %}
-                <li class="{% nav_active request.path about_index %}"><a href="{{ about_index }}">ACCUEIL</a></li>
-                <li class="{% nav_active request.path recipes_index %}"><a href="{{ recipes_index }}">RECETTES</a></li>
-                <li class="{% nav_active request.path shatterynote_index %}"><a href="{{ shatterynote_index }}">SHATTERY NOTE</a></li>
-            </ul>
-        </div>
-        <div id="sidebar">
+            <nav>
+                <ul id="header-nav">
+                    {% url 'about:index' as about_index %}
+                    <li class="{% nav_active request.path about_index %}"><a href="{{ about_index }}">ACCUEIL</a></li>
+                    
+                    {% url 'recipes:index' as recipes_index %}
+                    <li class="{% nav_active request.path recipes_index %}"><a href="{{ recipes_index }}">RECETTES</a></li>
+                    
+                    {% url 'shatterynote:index' as shatterynote_index %}
+                    <li class="{% nav_active request.path shatterynote_index %}"><a href="{{ shatterynote_index }}">SHATTERY NOTE</a></li>
+                    
+                    {% if request.user.is_authenticated %}
+                        {% url 'accounts:logout' as accounts_logout %}
+                        <li id="logout" class="user-management {% nav_active request.path accounts_logout %}"><a href="{{ accounts_logout }}?next={{ request.path|urlencode }}">Déconnexion</a></li>
+                    {% else %}
+                        {% url 'accounts:login' as accounts_login %}
+                        <li id="login" class="user-management {% nav_active request.path accounts_login %}"><a href="{{ accounts_login }}?next={{ request.path|urlencode }}">Connexion</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+        <nav id="sidebar">
             <div id="accordion">
                 {% set_about_navigation request.path as nodes_about %}
                 {% include 'navigation_node.html' with title='Accueil' nodes=nodes_about pattern=about_index %}
@@ -42,9 +51,14 @@
                 {% set_shatterynote_navigation request.path as nodes_shatterynote %}
                 {% include 'navigation_node.html' with title='Shattery Note' nodes=nodes_shatterynote pattern=shatterynote_index %}
             </div>
-        </div>
-        <div id="content">{% block content %}{% endblock %}</div>
-        <div id="footer">Copyright &copy; 2013-{% now "Y" %} Maxime ROSSINI</div>
+        </nav>
+        <section id="content">{% block content %}{% endblock %}</section>
+        <footer id="footer">Copyright &copy; 2013-{% now "Y" %} Maxime ROSSINI</footer>
+        
+        <script src="{% static 'js/jquery-2.0.3.js' %}"></script>
+        <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
+        <script src="{% static 'js/main.js' %}"></script>
+        {% block additional_page_body %}{% endblock %}
         {% if piwik_enabled %}{% include 'piwik.html' %}{% endif %}
     </body>
 </html>
