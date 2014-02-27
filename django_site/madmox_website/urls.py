@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^$', RedirectView.as_view(url='/about/')),
 
     # Custom applications
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^about/', include('about.urls', namespace='about')),
     url(r'^recipes/', include('recipes.urls', namespace='recipes')),
     url(r'^shatterynote/', include('shatterynote.urls', namespace='shatterynote')),

@@ -1,0 +1,73 @@
+form {
+    margin: 2em 1em 3em 1em;
+    padding: 1em;
+    width: 50%;
+    border: 1px solid rgb(220, 220, 220);
+}
+
+.login-field {
+    display: table;
+    width: 80%;
+    margin: 1em auto 0 auto;
+}
+
+label {
+    display: inline-block;
+    width: 40%;
+    font-size: 1.3em;
+    color: rgb(100, 100, 100);
+}
+
+input[type="text"], input[type="password"] {
+    display: inline-block;
+    width: 50%;
+    height: 1.8em;
+    font-size: 1.3em;
+    background-color: rgb(248, 248, 248);
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+    transition: box-shadow 0.2s linear 0s;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(0, 100, 200, 0.6);
+}
+
+input[type="submit"] {
+    display: table;
+    width: 60%;
+    padding: 0.2em;
+    margin: 1em auto 0 auto;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+    background-color: rgb(200, 30, 0);
+    color: white;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+input[type="submit"]:hover, input[type="submit"]:focus {
+    background-color: rgb(255, 50, 0);
+    cursor: pointer;
+}
+
+.error {
+    display: table;
+    width: 90%;
+    padding: 0.2em 0.5em;
+    margin: 1em auto;
+    color: red;
+    font-weight: bold;
+    border: 2px solid red;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-radius: 4px;
+}
