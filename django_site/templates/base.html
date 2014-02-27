@@ -18,9 +18,9 @@
     </head>
     <body>
         <header id="header">
-            <div id="header-title">www.madmox.fr</div>
+            <div class="header-title">www.madmox.fr</div>
             <nav>
-                <ul id="header-nav">
+                <ul class="header-nav">
                     {% url 'about:index' as about_index %}
                     <li class="{% nav_active request.path about_index %}"><a href="{{ about_index }}">ACCUEIL</a></li>
                     
@@ -29,13 +29,14 @@
                     
                     {% url 'shatterynote:index' as shatterynote_index %}
                     <li class="{% nav_active request.path shatterynote_index %}"><a href="{{ shatterynote_index }}">SHATTERY NOTE</a></li>
-                    
+                </ul>
+                <ul class="header-nav user-management">
                     {% if request.user.is_authenticated %}
                         {% url 'accounts:logout' as accounts_logout %}
-                        <li id="logout" class="user-management {% nav_active request.path accounts_logout %}"><a href="{{ accounts_logout }}?next={{ request.path|urlencode }}">Déconnexion</a></li>
+                        <li id="logout" class="{% nav_active request.path accounts_logout %}"><a href="{{ accounts_logout }}?next={{ request.path|urlencode }}">Déconnexion <span class="username">({{ request.user.username }})</span></a></li>
                     {% else %}
                         {% url 'accounts:login' as accounts_login %}
-                        <li id="login" class="user-management {% nav_active request.path accounts_login %}"><a href="{{ accounts_login }}?next={{ request.path|urlencode }}">Connexion</a></li>
+                        <li id="login" class="{% nav_active request.path accounts_login %}"><a href="{{ accounts_login }}?next={{ request.path|urlencode }}">Connexion</a></li>
                     {% endif %}
                 </ul>
             </nav>
