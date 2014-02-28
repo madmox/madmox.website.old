@@ -1,16 +1,11 @@
-{% extends "base.html" %}
-{% load static from staticfiles %}
+{% extends "accounts/base.html" %}
 
 {% block title %}Identification - www.madmox.fr{% endblock %}
 {% block description %}Page d'identification à www.madmox.fr{% endblock %}
-{% block keywords %}identification connexion login madmox{% endblock %}
-
-{% block additional_page_head %}
-    <link href="{% static 'accounts/css/app.css' %}" media="all" rel="stylesheet" type="text/css">
-{% endblock %}
 
 {% block content %}
-    <form id="login-form" method="POST" action="{% url 'accounts:login' %}">{% csrf_token %}
+    <form id="login-form" method="POST" action="{% url 'accounts:login' %}">
+        {% csrf_token %}
         {% if form.errors %}
             <p class="error">Votre nom d'utilisateur et votre mot de passe ne correspondent pas. Veuillez réessayer.</p>
         {% endif %}
