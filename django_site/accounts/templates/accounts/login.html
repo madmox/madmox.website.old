@@ -9,11 +9,11 @@
         {% if form.errors %}
             <p class="error">Votre nom d'utilisateur et votre mot de passe ne correspondent pas. Veuillez réessayer.</p>
         {% endif %}
-        <div class="login-field">
+        <div class="field">
             {{ form.username.label_tag }}
             {{ form.username }}
         </div>
-        <div class="login-field">
+        <div class="field">
             {{ form.password.label_tag }}
             {{ form.password }}
         </div>

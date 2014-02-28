@@ -1,11 +1,15 @@
 form {
     margin: 2em 1em 3em 1em;
     padding: 1em;
-    width: 50%;
     border: 1px solid rgb(220, 220, 220);
 }
 
-.login-field {
+#login-form { width: 50%; }
+#password-change-form { width: 70%; }
+#password-reset-form { width: 50%; }
+#password-reset-confirm-form { width: 50%; }
+
+.field {
     display: table;
     width: 80%;
     margin: 1em auto 0 auto;
@@ -16,15 +20,17 @@ label {
     width: 40%;
     font-size: 1.3em;
     color: rgb(100, 100, 100);
+    vertical-align: middle;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="email"] {
     display: inline-block;
     width: 50%;
     height: 1.8em;
     padding: 0 0.5em;
     font-size: 1.3em;
     background-color: rgb(248, 248, 248);
+    vertical-align: middle;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -34,7 +40,7 @@ input[type="text"], input[type="password"] {
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(0, 100, 200, 0.6);
 }
 
@@ -59,16 +65,36 @@ input[type="submit"]:hover, input[type="submit"]:focus {
     cursor: pointer;
 }
 
-.error {
-    display: table;
-    width: 90%;
+.error, .wrong-link {
     padding: 0.2em 0.5em;
-    margin: 1em auto;
     color: red;
     font-weight: bold;
-    border: 2px solid red;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+}
+
+.wrong-link { width: 80%; margin: 2em 1em; }
+
+.instructions { margin-bottom: 2em; color: rgb(100, 100, 100); }
+
+.success {
+    color: rgb(0, 150, 0);
+    font-size: 1.8em;
+    margin: 2em 1em 1em 1em;
+    padding: 1em;
+    text-align: center;
+    width: 80%;
+    border: 2px solid rgb(0, 150, 0);
     border-radius: 4px;
 }
+
+.errorlist {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.errorlist li {
+    padding: 0.2em 0.5em;
+    color: red;
+    font-weight: bold;
+    margin-left: 40%;
+}
+.errorlist li:before { content: "* "; }
