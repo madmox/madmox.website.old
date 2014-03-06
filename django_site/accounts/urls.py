@@ -32,6 +32,7 @@ urlpatterns = patterns('',
         'django.contrib.auth.views.password_reset',
         {
             'template_name': 'accounts/password_reset.html',
+            #TODO: use 'html_email_template_name' when switching to django 1.7
             'email_template_name': 'accounts/password_reset_email.html',
             'subject_template_name': 'accounts/password_reset_subject.txt',
             'post_reset_redirect': 'accounts:password-reset-done',
