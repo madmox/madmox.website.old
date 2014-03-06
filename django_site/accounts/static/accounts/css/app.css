@@ -98,3 +98,6 @@ input[type="submit"]:hover, input[type="submit"]:focus {
     margin-left: 40%;
 }
 .errorlist li:before { content: "* "; }
+
+.password-reset { display: table; margin: 1em auto 0; }
+.password-reset a { color: rgb(120, 120, 120); font-style: italic; }
