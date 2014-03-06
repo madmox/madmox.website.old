@@ -4,7 +4,7 @@
 {% block description %}Page d'identification à www.madmox.fr{% endblock %}
 
 {% block content %}
-    <form id="login-form" method="POST" action="{% url 'accounts:login' %}">
+    <form id="login-form" method="POST" action="{{ request.path }}">
         {% csrf_token %}
         {% if form.errors %}
             <p class="error">Votre nom d'utilisateur et votre mot de passe ne correspondent pas. Veuillez réessayer.</p>
