@@ -8,6 +8,7 @@ form {
 #password-change-form { width: 70%; }
 #password-reset-form { width: 50%; }
 #password-reset-confirm-form { width: 50%; }
+#update-account-form { width: 80%; }
 
 .field {
     display: table;

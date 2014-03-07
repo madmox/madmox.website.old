@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from accounts import views
 
 urlpatterns = patterns('',
     url(
@@ -60,5 +61,11 @@ urlpatterns = patterns('',
         'django.contrib.auth.views.password_reset_complete',
         {'template_name': 'accounts/password_reset_complete.html'},
         name='password-reset-complete'
+    ),
+    url(
+        r'^update/$',
+        views.update_account,
+        {'template_name': 'accounts/update_account.html'},
+        name='update'
     ),
 )

@@ -37,8 +37,11 @@
                 </ul>
                 <ul class="header-nav user-management">
                     {% if request.user.is_authenticated %}
+                        {% url 'accounts:update' as accounts_update %}
+                        <li id="update-account" class="{% nav_active request.path accounts_update %}"><a href="{{ accounts_update }}">Mon profil <span class="username">({{ request.user.username }})</span></a></li>
+                        
                         {% url 'accounts:logout' as accounts_logout %}
-                        <li id="logout" class="{% nav_active request.path accounts_logout %}"><a href="{{ accounts_logout }}?next={{ request.path|urlencode }}">Déconnexion <span class="username">({{ request.user.username }})</span></a></li>
+                        <li id="logout" class="{% nav_active request.path accounts_logout %}"><a href="{{ accounts_logout }}?next={{ request.path|urlencode }}">Déconnexion</a></li>
                     {% else %}
                         {% url 'accounts:login' as accounts_login %}
                         <li id="login" class="{% nav_active request.path accounts_login %}"><a href="{{ accounts_login }}?next={{ request.path|urlencode }}">Connexion</a></li>

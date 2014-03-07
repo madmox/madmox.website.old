@@ -1,0 +1,11 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Mon profil - www.madmox.fr{% endblock %}
+{% block description %}Page de mise à jour du profil sur www.madmox.fr{% endblock %}
+
+{% block content %}
+    <form id="update-account-form" method="POST" action="{{ request.path }}">
+        {% csrf_token %}
+        <input type="submit" value="Mettre à jour mon profil" />
+    </form>
+{% endblock %}

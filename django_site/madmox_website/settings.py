@@ -22,6 +22,7 @@ DEBUG = (get_env_var('DJANGO_DEBUG', required=False) != None)
 TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = get_env_var('DJANGO_ALLOWED_HOSTS').split()
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = '/'
 
 # Application definition
