@@ -4,6 +4,7 @@
 {% block description %}Page d'identification à www.madmox.fr{% endblock %}
 
 {% block content %}
+    <div class="form-header"><h1>Se connecter</h1></div>
     <form id="login-form" method="POST" action="{{ request.path }}">
         {% csrf_token %}
         {% if form.errors %}
@@ -18,9 +19,7 @@
             {{ form.password }}
         </div>
         <input type="submit" value="Connexion" />
-        <div class="password-reset">
-            <a href="{% url 'accounts:password-reset' %}">J'ai oublié mon mot de passe</a>
-        </div>
         <input type="hidden" name="next" value="{{ next }}" />
+        <a class="secondary-button" href="{% url 'accounts:password-reset' %}">J'ai oublié mon mot de passe</a>
     </form>
 {% endblock %}

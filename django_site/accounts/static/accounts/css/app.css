@@ -1,14 +1,21 @@
-form {
-    margin: 2em 1em 3em 1em;
-    padding: 1em;
+.form-header {
+    margin: 1.3em 1em 0 1em;
+    padding: 0.5em 1em;
+    color: rgb(100, 100, 100);
+    background-color: rgb(240, 240, 240);
+    text-align: center;
+    width: 70%;
     border: 1px solid rgb(220, 220, 220);
 }
 
-#login-form { width: 50%; }
-#password-change-form { width: 70%; }
-#password-reset-form { width: 50%; }
-#password-reset-confirm-form { width: 50%; }
-#update-account-form { width: 80%; }
+h1 { padding: 0; margin: 0; }
+
+form {
+    margin: 1em 1em 3em 1em;
+    padding: 1em;
+    border: 1px solid rgb(220, 220, 220);
+    width: 70%;
+}
 
 .field {
     display: table;
@@ -100,5 +107,23 @@ input[type="submit"]:hover, input[type="submit"]:focus {
 }
 .errorlist li:before { content: "* "; }
 
-.password-reset { display: table; margin: 1em auto 0; }
-.password-reset a { color: rgb(120, 120, 120); font-style: italic; }
+.secondary-button {
+    display: table;
+    width: 60%;
+    padding: 0.2em;
+    margin: 1em auto 0 auto;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+    background-color: rgb(220, 220, 220);
+    color: rgb(100, 100, 100);
+    font-size: 1.2em;
+    text-align: center;
+    text-decoration: none;
+}
+.secondary-button:hover {
+    background-color: rgb(230, 230, 230);
+    cursor: pointer;
+}
