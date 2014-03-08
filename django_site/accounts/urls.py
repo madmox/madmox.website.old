@@ -14,7 +14,7 @@ urlpatterns = patterns('',
         name='logout'
     ),
     url(
-        r'^password/change/$',
+        r'^password/update/$',
         'django.contrib.auth.views.password_change',
         {
             'template_name': 'accounts/password_change.html',
@@ -23,7 +23,7 @@ urlpatterns = patterns('',
         name='password-change'
     ),
     url(
-        r'^password/change/done/$',
+        r'^password/update/done/$',
         'django.contrib.auth.views.password_change_done',
         {'template_name': 'accounts/password_change_done.html'},
         name='password-change-done'
@@ -63,9 +63,9 @@ urlpatterns = patterns('',
         name='password-reset-complete'
     ),
     url(
-        r'^update/$',
+        r'^profile/update/$',
         views.update_account,
         {'template_name': 'accounts/update_account.html'},
-        name='update'
+        name='profile-update'
     ),
 )

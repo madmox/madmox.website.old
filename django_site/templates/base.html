@@ -37,7 +37,7 @@
                 </ul>
                 <ul class="header-nav user-management">
                     {% if request.user.is_authenticated %}
-                        {% url 'accounts:update' as accounts_update %}
+                        {% url 'accounts:profile-update' as accounts_update %}
                         <li id="update-account" class="{% nav_active request.path accounts_update %}"><a href="{{ accounts_update }}">Mon profil <span class="username">({{ request.user.username }})</span></a></li>
                         
                         {% url 'accounts:logout' as accounts_logout %}
