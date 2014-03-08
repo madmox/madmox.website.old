@@ -48,7 +48,7 @@ p {
 }
 
 .header-nav a {
-    display: block;
+    display: table;
     height: 100%;
     color: white;
     padding: 0 10px;
@@ -70,8 +70,11 @@ p {
     right: 0;
 }
 
-.header-nav .username {
-    color: white;
+.user-management li {
+    font-size: 0.7em;
+}
+
+.user-management .username {
     font-size: 0.8em;
     line-height: 0.8em;
 }

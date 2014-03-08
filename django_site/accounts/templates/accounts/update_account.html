@@ -1,0 +1,20 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Mon profil - www.madmox.fr{% endblock %}
+{% block description %}Page de mise à jour du profil sur www.madmox.fr{% endblock %}
+
+{% block content %}
+    <div class="form-header"><h1>Mon profil</h1></div>
+    <form id="update-account-form" method="POST" action="{{ request.path }}">
+        {% csrf_token %}
+        {% for formfield in form %}
+            <div class="field">
+                {{ formfield.label_tag }}
+                {{ formfield }}
+                {{ formfield.errors }}
+            </div>
+        {% endfor %}
+        <input type="submit" value="Mettre à jour mon profil" />
+        <a class="secondary-button" href="{% url 'accounts:password-change' %}">Mettre à jour mon mot de passe</a>
+    </form>
+{% endblock %}

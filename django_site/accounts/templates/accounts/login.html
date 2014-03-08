@@ -1,28 +1,24 @@
-{% extends "base.html" %}
-{% load static from staticfiles %}
+{% extends "accounts/base.html" %}
 
 {% block title %}Identification - www.madmox.fr{% endblock %}
 {% block description %}Page d'identification à www.madmox.fr{% endblock %}
-{% block keywords %}identification connexion login madmox{% endblock %}
-
-{% block additional_page_head %}
-    <link href="{% static 'accounts/css/app.css' %}" media="all" rel="stylesheet" type="text/css">
-{% endblock %}
 
 {% block content %}
-    <form id="login-form" method="POST" action="{% url 'accounts:login' %}">{% csrf_token %}
+    <div class="form-header"><h1>Se connecter</h1></div>
+    <form id="login-form" method="POST" action="{{ request.path }}">
+        {% csrf_token %}
         {% if form.errors %}
             <p class="error">Votre nom d'utilisateur et votre mot de passe ne correspondent pas. Veuillez réessayer.</p>
         {% endif %}
-        <div class="login-field">
-            {{ form.username.label_tag }}
-            {{ form.username }}
-        </div>
-        <div class="login-field">
-            {{ form.password.label_tag }}
-            {{ form.password }}
-        </div>
+        {% for formfield in form %}
+            <div class="field">
+                {{ formfield.label_tag }}
+                {{ formfield }}
+                {{ formfield.errors }}
+            </div>
+        {% endfor %}
         <input type="submit" value="Connexion" />
         <input type="hidden" name="next" value="{{ next }}" />
+        <a class="secondary-button" href="{% url 'accounts:password-reset' %}">J'ai oublié mon mot de passe</a>
     </form>
 {% endblock %}
