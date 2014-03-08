@@ -10,14 +10,13 @@
         {% if form.errors %}
             <p class="error">Votre nom d'utilisateur et votre mot de passe ne correspondent pas. Veuillez réessayer.</p>
         {% endif %}
-        <div class="field">
-            {{ form.username.label_tag }}
-            {{ form.username }}
-        </div>
-        <div class="field">
-            {{ form.password.label_tag }}
-            {{ form.password }}
-        </div>
+        {% for formfield in form %}
+            <div class="field">
+                {{ formfield.label_tag }}
+                {{ formfield }}
+                {{ formfield.errors }}
+            </div>
+        {% endfor %}
         <input type="submit" value="Connexion" />
         <input type="hidden" name="next" value="{{ next }}" />
         <a class="secondary-button" href="{% url 'accounts:password-reset' %}">J'ai oublié mon mot de passe</a>
