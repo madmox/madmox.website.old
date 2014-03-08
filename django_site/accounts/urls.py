@@ -68,4 +68,10 @@ urlpatterns = patterns('',
         {'template_name': 'accounts/update_account.html'},
         name='profile-update'
     ),
+    url(
+        r'^profile/update/done/$',
+        views.update_account_done,
+        {'template_name': 'accounts/update_account_done.html'},
+        name='profile-update-done'
+    ),
 )
