@@ -1,0 +1,12 @@
+{% extends 'share/base.html' %}
+
+{% block content %}
+    <ul class="share-link-list">
+        {% if not current_directory.is_root %}
+            <li><a href="{{ current_directory.parent_url }}">..</a></li>
+        {% endif %}
+        {% for child in current_directory.children %}
+            <li><a href="{{ child.url }}">{{ child.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
