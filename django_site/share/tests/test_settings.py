@@ -1,8 +1,7 @@
-from django.test import TestCase
-from django.core.exceptions import ImproperlyConfigured
+from core.tests.utils import SettingsTestsBase
 
 
-class TestSettings(TestCase):
+class SettingsTests(SettingsTestsBase):
+
     def test_share_setting_share(self):
-        from share import settings
-        self.assertNotEqual(settings.SHARE_ROOT, '')
+        self.check_environment_key('DJANGO_AES_KEY')
