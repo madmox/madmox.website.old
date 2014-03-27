@@ -1,12 +1,16 @@
 {% extends 'share/base.html' %}
 
+{% block title %}Share - www.madmox.fr{% endblock %}
+{% block keywords %}share partage fichiers madmox{% endblock %}
+{% block description %}Partage de fichiers sur www.madmox.fr{% endblock %}
+
 {% block content %}
     <ul class="share-link-list">
-        {% if not current_directory.is_root %}
-            <li><a href="{{ current_directory.parent_url }}">..</a></li>
+        {% if not current_directory.isroot %}
+            <li><a href="{% url 'share:browse' current_directory.parent_url %}">..</a></li>
         {% endif %}
         {% for child in current_directory.children %}
-            <li><a href="{{ child.url }}">{{ child.name }}</a></li>
+            <li><a href="{% url 'share:browse' child.url %}">{{ child.name }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}
