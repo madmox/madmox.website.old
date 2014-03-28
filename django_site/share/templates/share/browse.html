@@ -6,11 +6,15 @@
 
 {% block content %}
     <ul class="share-link-list">
-        {% if not current_directory.isroot %}
-            <li><a href="{% url 'share:browse' current_directory.parent_url %}">..</a></li>
+        {% if authorized %}
+            {% if not current_directory.isroot %}
+                <li class="share-directory"><a href="{% url 'share:browse' current_directory.parent_url %}">..</a></li>
+            {% endif %}
+            {% for child in current_directory.children %}
+                <li class="{% if child.isdir %}share-directory{% else %}share-file{% endif %}"><a href="{% url 'share:browse' child.url %}">{{ child.name }}</a></li>
+            {% endfor %}
+        {% else %}
+            <p class="share-unauthorized">Vous n'avez pas les droits pour accéder à cette application.</p>
         {% endif %}
-        {% for child in current_directory.children %}
-            <li><a href="{% url 'share:browse' child.url %}">{{ child.name }}</a></li>
-        {% endfor %}
     </ul>
 {% endblock %}

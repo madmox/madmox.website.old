@@ -171,8 +171,8 @@ class ViewsTests(BaseTestCase):
         )
         
     def test_share_views_browse_unauthorized_user(self):
-        """User has not the permission for browsing, the response must be a
-        redirect to the login page"""
+        """User has not the permission for browsing, the response must not
+        contain the share directory"""
         
         self.create_unauthorized_user()
         
@@ -182,13 +182,11 @@ class ViewsTests(BaseTestCase):
         response = self.client.get(
             reverse('share:browse', args=('',))
         )
-        self.assertRedirects(
-            response,
-            '{0}?next={1}'.format(
-                reverse('accounts:login'),
-                reverse('share:browse', args=('',))
-            )
-        )
+        self.assertEqual(response.status_code, 200)
+        cur_dir = response.context['current_directory']
+        authorized = response.context['authorized']
+        self.assertIsNone(cur_dir)
+        self.assertFalse(authorized)
         
     def test_share_views_browse_login(self):
         """Tests the authorized user has access to the page"""
@@ -202,6 +200,10 @@ class ViewsTests(BaseTestCase):
             reverse('share:browse', args=('',))
         )
         self.assertEqual(response.status_code, 200)
+        cur_dir = response.context['current_directory']
+        authorized = response.context['authorized']
+        self.assertIsNotNone(cur_dir)
+        self.assertTrue(authorized)
     
     def test_share_views_browse_invalid_path(self):
         """Path is invalid, the response must be an HTTP 404 code"""
