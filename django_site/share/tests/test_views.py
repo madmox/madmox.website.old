@@ -68,14 +68,14 @@ class UtilsTests(BaseTestCase):
         self.assertTrue(isfile)
     
     def test_share_helpers_filesystemnode_does_not_exist(self):
-        """Checks DirectoryNode() raises an error if the given path
+        """Checks FileSystemNode() raises an error if the given path
         does not exist"""
         
         with self.assertRaises(DoesNotExist):
             node = FileSystemNode('/wrong_path/')
     
     def test_share_helpers_filesystemnode_no_children(self):
-        """Checks DirectoryNode() returns an empty node if the given path
+        """Checks FileSystemNode() returns an empty node if the given path
         matches an empty directory"""
         
         node = FileSystemNode(self.dirname_empty)
@@ -84,7 +84,7 @@ class UtilsTests(BaseTestCase):
         self.assertEqual(node.children, [])
     
     def test_share_helpers_filesystemnode_dir_child(self):
-        """Checks DirectoryNode() returns a list of valid nodes if the
+        """Checks FileSystemNode() returns a list of valid nodes if the
         path matches a directory containing another node, and checks
         the child is a valid node"""
         
