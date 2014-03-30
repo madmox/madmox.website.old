@@ -31,11 +31,15 @@ class FileSystemNode:
             raise DoesNotExist("The path {0} does not exist.".format(path))
         
         self.path = path
-        self.name = os.path.basename(path.rstrip('/\\'))
+        self.local_path = self.build_local_path()
         self.isfile = os.path.isfile(path)
         self.isdir = os.path.isdir(path)
-        self.url = self.build_url()
         self.isroot = (path == SHARE_ROOT)
+        if self.isroot:
+            self.name = 'share'
+        else:
+            self.name = os.path.basename(path.rstrip('/\\'))
+        self.url = self.build_url()
         self.parent_url = self.build_parent_url()
         if not (self.isfile or self.isdir):
             raise IsNotFileOrDirectory(
@@ -51,6 +55,16 @@ class FileSystemNode:
             abspath = os.path.join(self.path, child)
             self.children.append(FileSystemNode(abspath, set_children=False))
     
+    def build_local_path(self):
+        # Removes share root part from path
+        # We want users to see the share root as a virtual root
+        local_path = '/' + re.sub(
+            r'^{0}'.format(re.escape(SHARE_ROOT)),
+            r'',
+            self.path
+        ).replace('\\', '/').lstrip('/')
+        return local_path
+    
     def build_url(self):
         # Removes share root part from path
         # We want users to see the share root as a virtual root
@@ -58,7 +72,9 @@ class FileSystemNode:
             r'^{0}'.format(re.escape(SHARE_ROOT)),
             r'',
             self.path
-        ).replace('\\', '/').lstrip('/')
+        ).replace('\\', '/').strip('/')
+        if self.isdir:
+            relative_url += '/'
         
         return relative_url
 
