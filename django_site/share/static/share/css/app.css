@@ -1,1 +1,59 @@
-.share-link-list {}
+.share-authorized {
+    margin: 2em;
+    border: 2px solid rgb(0, 50, 0);
+    border-radius: 8px;
+    width: 80%;
+    background-color: rgb(245, 250, 200);
+}
+
+.share-unauthorized {
+    width: 80%;
+}
+
+.share-authorized h1 {
+    font-weight: normal;
+    color: rgb(0, 50, 0);
+    margin: 0 0 0 1em;
+    padding: 0 0.5em;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    position: relative;
+    bottom: 0.75em;
+    background-image: linear-gradient(bottom, rgb(245, 250, 200) 0.5em, white 0.5em);
+    background-image: -moz-linear-gradient(bottom, rgb(245, 250, 200) 0.5em, white 0.5em);
+    background-image: -webkit-linear-gradient(bottom, rgb(245, 250, 200) 0.5em, white 0.5em);
+    display: inline-block;
+}
+
+.share-authorized ul {
+    padding: 0 2em 2em 2em;
+    margin: 0;
+}
+
+.share-authorized li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 1.5em;
+    line-height: 1.5em;
+}
+
+.share-authorized a {
+    text-decoration: none;
+    padding-left: 1.5em;
+    color: rgb(0, 50, 0);
+}
+
+.share-authorized a:hover {
+    text-decoration: underline;
+}
+
+.share-directory {
+    background: left center no-repeat url('../img/folder.png');
+    background-size: 1em 1em;
+}
+
+.share-file {
+    background: left center no-repeat url('../img/file.png');
+    background-size: 1em 1em;
+}
