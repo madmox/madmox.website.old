@@ -3,5 +3,5 @@ from share import views
 
 
 urlpatterns = patterns('',
-    url(r'^(?P<path>.*)$', views.browse, name='browse'),
+    url(r'^browse/(?P<path>.*)$', views.browse, name='browse'),
 )
