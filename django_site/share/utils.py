@@ -46,14 +46,20 @@ class FileSystemNode:
                 "The path {0} is not a file or a directory.".format(path)
             )
         
-        self.children = []
         if self.isdir and set_children:
-            self.set_children()
+            self.children = self.get_children()
+        else:
+            self.children = []
     
-    def set_children(self):
-        for child in os.listdir(self.path):
+    def get_children(self):
+        child_dirs, child_files = [], []
+        for child in sorted(os.listdir(self.path)):
             abspath = os.path.join(self.path, child)
-            self.children.append(FileSystemNode(abspath, set_children=False))
+            if os.path.isdir(abspath):
+                child_dirs.append(FileSystemNode(abspath, set_children=False))
+            if os.path.isfile(abspath):
+                child_files.append(FileSystemNode(abspath, set_children=False))
+        return child_dirs + child_files
     
     def build_local_path(self):
         # Removes share root part from path
