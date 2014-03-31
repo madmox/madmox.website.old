@@ -53,7 +53,7 @@ class FileSystemNode:
     
     def get_children(self):
         child_dirs, child_files = [], []
-        for child in sorted(os.listdir(self.path)):
+        for child in sorted(os.listdir(self.path), key=str.lower):
             abspath = os.path.join(self.path, child)
             if os.path.isdir(abspath):
                 child_dirs.append(FileSystemNode(abspath, set_children=False))
