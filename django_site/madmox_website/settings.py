@@ -25,7 +25,7 @@ ALLOWED_HOSTS = get_env_var('DJANGO_ALLOWED_HOSTS').split()
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = '/'
-RUNNING_DEVSERVER = (sys.argv[1] == 'runserver')
+RUNNING_DEVSERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
 
 # Application definition
 
