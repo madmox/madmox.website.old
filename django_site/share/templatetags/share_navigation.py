@@ -1,6 +1,8 @@
 from django import template
 from django.core.urlresolvers import reverse
 
+import urllib.parse
+
 from core.navigation import NavigationNode
 from share.utils import (
     get_physical_path,
@@ -23,7 +25,9 @@ def set_share_navigation(context, current_path):
     for child in node.children:
         url = reverse('share:browse', args=(child.url,))
         label = child.name
-        active = current_path.startswith(url)
+        unquoted_curpath = urllib.parse.unquote(current_path)
+        unquoted_url = urllib.parse.unquote(url)
+        active = unquoted_curpath.startswith(unquoted_url)
         results.append(NavigationNode(active, url, label))
     
     return results
