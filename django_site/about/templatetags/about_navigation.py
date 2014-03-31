@@ -2,6 +2,8 @@ from django import template
 from django.core.urlresolvers import reverse
 from core.navigation import NavigationNode
 
+import urllib.parse
+
 register = template.Library()
 
 
@@ -14,7 +16,7 @@ def set_about_navigation(current_path):
     
     url = reverse('about:index')
     label = 'A propos'
-    active = (current_path == url)
+    active = (urllib.parse.unquote(current_path) == urllib.parse.unquote(url))
     results.append(NavigationNode(active, url, label))
     
     url = reverse('about:cv')
