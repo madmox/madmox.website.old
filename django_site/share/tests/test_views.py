@@ -103,21 +103,20 @@ class UtilsTests(BaseTestCase):
         match a valid file"""
         
         with self.assertRaises(DoesNotExist):
-            fsock, file_name, file_size, mime_type = get_file_infos('/wrong_path/')
+            file_name, file_size, mime_type = get_file_infos('/wrong_path/')
     
     def test_share_helpers_get_file_infos_is_a_directory(self):
         """Checks get_file_infos raises an error if the given path matches
         a valid directory"""
         
         with self.assertRaises(IsNotFile):
-            fsock, file_name, file_size, mime_type = get_file_infos(self.dirname)
+            file_name, file_size, mime_type = get_file_infos(self.dirname)
     
     def test_share_helpers_get_file_infos_valid_text_file(self):
         """Checks get_file_infos returns correct informations and does not
         raise any errors if the given path matches a valid file"""
         
-        fsock, file_name, file_size, mime_type = get_file_infos(self.fname)
-        self.assertIsNotNone(fsock)
+        file_name, file_size, mime_type = get_file_infos(self.fname)
         self.assertEqual(file_name, 'test_file')
         self.assertGreater(file_size, 0)
         self.assertIsNotNone(mime_type)
@@ -252,3 +251,4 @@ class ViewsTests(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response['Content-Type'].lower().startswith('text/html'))
+        self.assertEqual(response['X-SendFile'], self.fname)

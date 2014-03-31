@@ -117,6 +117,7 @@ def get_physical_path(path):
     if '..' in path or path.startswith('/') or path.startswith('\\'):
         return None, None, None
     
+    path = os.path.normpath(path.replace('\\', '/'))
     path = os.path.join(SHARE_ROOT, path)
     if os.path.exists(path):
         return path, os.path.isdir(path), os.path.isfile(path)
@@ -139,6 +140,5 @@ def get_file_infos(file_path):
     file_name = os.path.basename(file_path)
     file_size = os.path.getsize(file_path)
     mime_type = get_mime_type(file_path) or 'application/octet-stream'
-    fsock = open(file_path, 'rb')
     
-    return fsock, file_name, file_size, mime_type
+    return file_name, file_size, mime_type

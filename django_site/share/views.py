@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 
+from madmox_website import settings
 from share.utils import (
     get_physical_path,
     FileSystemNode,
@@ -29,16 +30,24 @@ def browse(request, path):
             )
         elif isfile is True:
             # Path is a file: starts transfer
-            fsock, file_name, file_size, mime_type = get_file_infos(path)
-            fwrapper = FileWrapper(fsock)
+            file_name, file_size, mime_type = get_file_infos(path)
             
             # Builds HTTP response
-            response = HttpResponse(fwrapper, content_type=mime_type)
+            if settings.RUNNING_DEVSERVER:
+                # In dev, let django upload the file itself
+                fsock = open(path, 'rb')
+                fwrapper = FileWrapper(fsock)
+                response = HttpResponse(fwrapper, content_type=mime_type)
+            else:
+                # Apache mod-xsendfile intercepts the X-SendFile header and
+                # processes the upload itself
+                response = HttpResponse(content_type=mime_type)
+                response['X-SendFile'] = path
             response['Content-Length'] = file_size
             response['Content-Disposition'] = (
                 'attachment; filename={0}'
             ).format(file_name)
-        
+            
             # Let the garbage collector close the file,
             # otherwise the transfer gets corrupted
             return response
