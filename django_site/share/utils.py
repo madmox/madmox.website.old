@@ -114,12 +114,16 @@ def get_physical_path(path):
     Converts the path exracted from the URL to a physical path
     """
     # Security against URL attacks
-    if '..' in path or path.startswith('/') or path.startswith('\\'):
+    if ('..' in path or ':' in path or
+        path.startswith('/') or path.startswith('\\')):
         return None, None, None
     
-    path = os.path.normpath(path.replace('\\', '/'))
-    path = os.path.join(SHARE_ROOT, path)
+    if path != '':
+        path = os.path.normpath(path.replace('\\', '/'))
+    path = os.path.normpath(os.path.join(SHARE_ROOT, path))
     if os.path.exists(path):
+        if os.path.isdir(path):
+            path += os.path.normpath('/')
         return path, os.path.isdir(path), os.path.isfile(path)
     else:
         return None, None, None

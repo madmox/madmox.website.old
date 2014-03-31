@@ -57,7 +57,7 @@ def browse(request, path):
     elif not request.user.is_authenticated():
         url = '{0}?next={1}'.format(
             reverse('accounts:login'),
-            reverse('share:browse', args=('',))
+            reverse('share:browse', args=(path,))
         )
         return HttpResponseRedirect(url)
     else:
