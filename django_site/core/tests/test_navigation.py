@@ -22,7 +22,7 @@ class CoreNavigationTests(TestCase):
         rendered = self.template.render(c)
         self.assertEqual(rendered, 'active')
 
-    def test_core_navigation_nav_active(self):
+    def test_core_navigation_nav_inactive(self):
         """
         Tests the nav_active template tag returns '' when the pattern
         does not match the current path

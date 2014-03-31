@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^about/', include('about.urls', namespace='about')),
     url(r'^recipes/', include('recipes.urls', namespace='recipes')),
     url(r'^shatterynote/', include('shatterynote.urls', namespace='shatterynote')),
+    url(r'^share/', include('share.urls', namespace='share')),
 )
 
 if settings.DEBUG:

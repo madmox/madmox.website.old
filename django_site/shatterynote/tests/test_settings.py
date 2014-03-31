@@ -1,11 +1,14 @@
-from django.test import TestCase
+from core.tests.utils import SettingsTestsBase
 
 
-class SettingsTests(TestCase):
+class SettingsTests(SettingsTestsBase):
     """
     Checks application relative settings
     """
-    def test_settings(self):
+    def test_shatterynote_settings_envkey(self):
+        self.check_environment_key('DJANGO_AES_KEY')
+
+    def test_shatterynote_settings_formatted(self):
         try:
             from shatterynote import settings
         except Exception as e:

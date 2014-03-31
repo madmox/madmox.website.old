@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 import os
+import sys
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 from core.tools import get_env_var
 
@@ -24,6 +25,7 @@ ALLOWED_HOSTS = get_env_var('DJANGO_ALLOWED_HOSTS').split()
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = '/'
+RUNNING_DEVSERVER = (sys.argv[1] == 'runserver')
 
 # Application definition
 
@@ -46,6 +48,7 @@ LOCAL_APPS = (
     'about',
     'recipes',
     'shatterynote',
+    'share',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS

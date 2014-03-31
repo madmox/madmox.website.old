@@ -5,6 +5,7 @@
 {% load about_navigation %}
 {% load recipes_navigation %}
 {% load shatterynote_navigation %}
+{% load share_navigation %}
 <html lang="fr-FR">
     <head>
         <title>{% block title %}{% endblock %}</title>
@@ -29,6 +30,9 @@
                     
                     {% url 'shatterynote:index' as shatterynote_index %}
                     <li class="{% nav_active request.path shatterynote_index %}"><a href="{{ shatterynote_index }}">SHATTERY NOTE</a></li>
+                    
+                    {% url 'share:browse' '' as share_browse %}
+                    <li class="{% nav_active request.path share_browse %}"><a href="{{ share_browse }}">SHARE</a></li>
                     
                     {% if request.user.is_staff %}
                         {% url 'admin:index' as admin_index %}
@@ -59,6 +63,11 @@
                 
                 {% set_shatterynote_navigation request.path as nodes_shatterynote %}
                 {% include 'navigation_node.html' with title='Shattery Note' nodes=nodes_shatterynote pattern=shatterynote_index %}
+                
+                {% if perms.share.can_browse %}
+                    {% set_share_navigation request.path as nodes_share %}
+                    {% include 'navigation_node.html' with title='Share' nodes=nodes_share pattern=share_browse %}
+                {% endif  %}
             </div>
         </nav>
         <section id="content">{% block content %}{% endblock %}</section>

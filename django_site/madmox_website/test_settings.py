@@ -1,14 +1,7 @@
-from django.test import TestCase
-import os
+from core.tests.utils import SettingsTestsBase
 
 
-class SettingsTests(TestCase):
-
-    def check_environment_key(self, key):
-        try:
-            os.environ[key]
-        except:
-            self.fail('Missing environment key {0}'.format(key))
+class SettingsTests(SettingsTestsBase):
 
     def test_settings(self):
         """
@@ -19,4 +12,3 @@ class SettingsTests(TestCase):
         self.check_environment_key('DJANGO_ALLOWED_HOSTS')
         self.check_environment_key('DJANGO_DATABASE_NAME')
         self.check_environment_key('DJANGO_MEDIA_ROOT')
-        self.check_environment_key('DJANGO_AES_KEY')
