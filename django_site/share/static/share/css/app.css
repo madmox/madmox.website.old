@@ -46,12 +46,25 @@
 
 .share-authorized a {
     text-decoration: none;
-    padding-left: 1.5em;
+    margin-left: 1.5em;
     color: rgb(0, 50, 0);
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 .share-authorized a:hover {
+    background-color: rgb(240, 245, 200);
+    border-radius: 4px;
     text-decoration: underline;
+}
+
+.share-size {
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 .share-directory {

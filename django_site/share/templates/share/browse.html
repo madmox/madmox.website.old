@@ -1,4 +1,5 @@
 {% extends 'share/base.html' %}
+{% load print_size from share_filters %}
 
 {% block title %}Share - www.madmox.fr{% endblock %}
 {% block keywords %}share partage fichiers madmox{% endblock %}
@@ -13,7 +14,12 @@
                     <li class="share-directory"><a href="{% url 'share:browse' current_directory.parent_url %}">..</a></li>
                 {% endif %}
                 {% for child in current_directory.children %}
-                    <li class="{% if child.isdir %}share-directory{% else %}share-file{% endif %}"><a href="{% url 'share:browse' child.url %}">{{ child.name }}</a></li>
+                    <li class="{% if child.isdir %}share-directory{% else %}share-file{% endif %}">
+                        <a href="{% url 'share:browse' child.url %}">
+                            <span class="share-name">{{ child.name }}</span>
+                            <span class="share-size">{{ child.size | print_size }}</span>
+                        </a>
+                    </li>
                 {% endfor %}
             </ul>
         </div>

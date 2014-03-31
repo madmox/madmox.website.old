@@ -31,34 +31,49 @@ class FileSystemNode:
             raise DoesNotExist("The path {0} does not exist.".format(path))
         
         self.path = path
-        self.local_path = self.build_local_path()
         self.isfile = os.path.isfile(path)
         self.isdir = os.path.isdir(path)
-        self.isroot = (path == SHARE_ROOT)
-        if self.isroot:
-            self.name = 'share'
-        else:
-            self.name = os.path.basename(path.rstrip('/\\'))
-        self.url = self.build_url()
-        self.parent_url = self.build_parent_url()
         if not (self.isfile or self.isdir):
             raise IsNotFileOrDirectory(
                 "The path {0} is not a file or a directory.".format(path)
             )
         
-        if self.isdir and set_children:
-            self.children = self.get_children()
+        self.isroot = (path == SHARE_ROOT)
+        if self.isroot:
+            self.name = 'share'
         else:
-            self.children = []
+            self.name = os.path.basename(path.rstrip('/\\'))
+        self.local_path = self.build_local_path()
+        self.url = self.build_url()
+        self.parent_url = self.build_parent_url()
+        self.size = self.get_size()
+        self.children = self.get_children(set_children)
     
-    def get_children(self):
+    def get_size(self):
+        """
+        Gets the folder or file total size (including sub dirs and files)
+        """
+        total_size = 0
+        if self.isdir:
+            for dirpath, dirnames, filenames in os.walk(self.path):
+                for f in filenames:
+                    fp = os.path.join(dirpath, f)
+                    total_size += os.path.getsize(fp)
+        else:
+            total_size = os.path.getsize(self.path)
+            
+        return total_size
+        
+    def get_children(self, set_children):
         child_dirs, child_files = [], []
-        for child in sorted(os.listdir(self.path), key=str.lower):
-            abspath = os.path.join(self.path, child)
-            if os.path.isdir(abspath):
-                child_dirs.append(FileSystemNode(abspath, set_children=False))
-            if os.path.isfile(abspath):
-                child_files.append(FileSystemNode(abspath, set_children=False))
+        if self.isdir and set_children:
+            for child in sorted(os.listdir(self.path), key=str.lower):
+                abspath = os.path.join(self.path, child)
+                if os.path.isdir(abspath):
+                    child_dirs.append(FileSystemNode(abspath, set_children=False))
+                if os.path.isfile(abspath):
+                    child_files.append(FileSystemNode(abspath, set_children=False))
+        
         return child_dirs + child_files
     
     def build_local_path(self):
