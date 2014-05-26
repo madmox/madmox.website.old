@@ -8,14 +8,14 @@
     <h1 class="recipes-title">{{ category.name }}</h1>
     <ul class="recipes-recipes">
         {% spaceless %}{% for recipe in category.ordered_recipes %}
-            <a href="{% url 'recipes:detail' recipe.pk recipe.slug %}">
-                <li>
+            <li>
+                <a href="{% url 'recipes:detail' recipe.pk recipe.slug %}">
                     {% if recipe.image %}
                         <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" width="90" height="60">
                     {% endif %}
                     <span>{{ recipe.name }}</span>
-                </li>
-            </a>
+                </a>
+            </li>
         {% empty %}
             <li class="recipes-list-empty">Aucune recette trouvée pour cette catégorie.</li>
         {% endfor %}{% endspaceless %}
