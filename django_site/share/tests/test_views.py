@@ -25,11 +25,22 @@ class BaseTestCase(TestCase):
         self.dirname = os.path.join(SHARE_ROOT, 'test_dir')
         if not os.path.exists(self.dirname):
             os.makedirs(self.dirname)
-        
+            
         # Creates a file
         self.fname = os.path.join(self.dirname, 'test_file')
         if not os.path.exists(self.fname):
             with open(self.fname, 'w') as f:
+                f.write('test content')
+            
+        # Creates an accentuated directory
+        self.dirname_accent = os.path.join(SHARE_ROOT, 'test_dir_é')
+        if not os.path.exists(self.dirname_accent):
+            os.makedirs(self.dirname_accent)
+        
+        # Creates an accentuated file in the accentuated dir
+        self.fname_accent = os.path.join(self.dirname_accent, 'test_file_é')
+        if not os.path.exists(self.fname_accent):
+            with open(self.fname_accent, 'w') as f:
                 f.write('test content')
             
         # Creates an empty directory
@@ -40,6 +51,8 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         """Removes the test directory structure in the shared dir"""
         os.rmdir(self.dirname_empty)
+        os.remove(self.fname_accent)
+        os.rmdir(self.dirname_accent)
         os.remove(self.fname)
         os.rmdir(self.dirname)
 
@@ -48,20 +61,32 @@ class UtilsTests(BaseTestCase):
 
     def test_share_helpers_get_physical_path_invalid(self):
         """Asserts an invalid path is correctly detected by the method"""
+        
         path, isdir, isfile = get_physical_path('invalid_path')
         self.assertIsNone(path)
         self.assertIsNone(isdir)
         self.assertIsNone(isfile)
 
-    def test_share_helpers_get_physical_path_dir(self):
-        """Asserts an valid dir path is correctly detected by the method"""
+    def test_share_helpers_get_physical_path_dir_accent(self):
+        """Asserts a valid dir path is correctly detected by the method"""
+        
         path, isdir, isfile = get_physical_path('test_dir')
+        self.assertTrue(path)
+        self.assertTrue(isdir)
+        self.assertFalse(isfile)
+
+    def test_share_helpers_get_physical_path_dir(self):
+        """Asserts an accentuated dir path is correctly detected by the
+        method"""
+        
+        path, isdir, isfile = get_physical_path('test_dir_é')
         self.assertTrue(path)
         self.assertTrue(isdir)
         self.assertFalse(isfile)
 
     def test_share_helpers_get_physical_path_file(self):
         """Asserts an valid file path is correctly detected by the method"""
+        
         path, isdir, isfile = get_physical_path('test_dir/test_file')
         self.assertTrue(os.path.exists(path))
         self.assertFalse(isdir)
@@ -81,7 +106,7 @@ class UtilsTests(BaseTestCase):
         node = FileSystemNode(self.dirname_empty)
         self.assertTrue(node.isdir)
         self.assertFalse(node.isfile)
-        self.assertEqual(node.children, [])
+        self.assertEqual(len(node.children), 0)
     
     def test_share_helpers_filesystemnode_dir_child(self):
         """Checks FileSystemNode() returns a list of valid nodes if the
@@ -89,6 +114,20 @@ class UtilsTests(BaseTestCase):
         the child is a valid node"""
         
         node = FileSystemNode(self.dirname)
+        self.assertTrue(node.isdir)
+        self.assertFalse(node.isfile)
+        self.assertEqual(len(node.children), 1)
+        
+        subnode = node.children[0]
+        self.assertFalse(subnode.isdir)
+        self.assertTrue(subnode.isfile)
+        self.assertEqual(subnode.children, [])
+    
+    def test_share_helpers_filesystemnode_dir_accent_and_child(self):
+        """Checks FileSystemNode() does not raise any error when
+        it has an accent in its name or in a child name"""
+        
+        node = FileSystemNode(self.dirname_accent)
         self.assertTrue(node.isdir)
         self.assertFalse(node.isfile)
         self.assertEqual(len(node.children), 1)
@@ -118,6 +157,16 @@ class UtilsTests(BaseTestCase):
         
         file_name, file_size, mime_type = get_file_infos(self.fname)
         self.assertEqual(file_name, 'test_file')
+        self.assertGreater(file_size, 0)
+        self.assertIsNotNone(mime_type)
+        self.assertNotEqual(mime_type, '')
+    
+    def test_share_helpers_get_file_infos_accentuated_file(self):
+        """Checks get_file_infos returns correct informations and does not
+        raise any errors if the given path matches a valid accentuated file"""
+        
+        file_name, file_size, mime_type = get_file_infos(self.fname_accent)
+        self.assertEqual(file_name, 'test_file_é')
         self.assertGreater(file_size, 0)
         self.assertIsNotNone(mime_type)
         self.assertNotEqual(mime_type, '')
@@ -219,7 +268,7 @@ class ViewsTests(BaseTestCase):
     
     def test_share_views_browse_valid_dir(self):
         """Path is a valid dir, the response must be an HTML page containing
-        sub directories and files infos"""
+        sub directories and file infos"""
         
         self.create_authorized_user()
         self.assertTrue(
@@ -236,6 +285,26 @@ class ViewsTests(BaseTestCase):
         self.assertIsNotNone(cur_dir)
         self.assertEqual(cur_dir.name, 'test_dir')
         self.assertEqual(cur_dir.url, 'test_dir/')
+    
+    def test_share_views_browse_valid_dir_accent(self):
+        """Path is a valid accentuated dir, the response must be an HTML page
+        containing sub directories and file infos"""
+        
+        self.create_authorized_user()
+        self.assertTrue(
+            self.client.login(username='unittest1', password='unittest1')
+        )
+        
+        response = self.client.get(
+            reverse('share:browse', args=('test_dir_é/',))
+        )
+            
+        self.assertEqual(response.status_code, 200)
+        
+        cur_dir = response.context['current_directory']
+        self.assertIsNotNone(cur_dir)
+        self.assertEqual(cur_dir.name, 'test_dir_é')
+        self.assertEqual(cur_dir.url, 'test_dir_é/')
     
     def test_share_views_browse_valid_file(self):
         """Path is a valid file, the response must be an HTTP response with
