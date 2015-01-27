@@ -61,10 +61,15 @@
     text-decoration: underline;
 }
 
+.share-name {
+    display: inline-block;
+    width: 85%;
+}
+
 .share-size {
-    position: absolute;
-    top: 0;
-    right: 0;
+    display: inline-block;
+    width: 15%;
+    text-align: right;
 }
 
 .share-directory {
