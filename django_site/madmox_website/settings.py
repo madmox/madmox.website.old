@@ -27,6 +27,15 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = '/'
 RUNNING_DEVSERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
 
+# Emailing
+
+ADMINS = tuple(get_env_var('DJANGO_ADMINS', required=False, default='').split())
+EMAIL_HOST = get_env_var('DJANGO_EMAIL_HOST', required=False, default='localhost')
+EMAIL_PORT = int(get_env_var('DJANGO_EMAIL_PORT', required=False, default='25'))
+EMAIL_HOST_USER = get_env_var('DJANGO_EMAIL_HOST_USER', required=False, default='')
+EMAIL_HOST_PASSWORD = get_env_var('DJANGO_EMAIL_HOST_PASSWORD', required=False, default='')
+SERVER_EMAIL = get_env_var('DJANGO_SERVER_EMAIL', required=False, default='root@localhost')
+
 # Application definition
 
 DEFAULT_APPS = (
@@ -39,7 +48,6 @@ DEFAULT_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    'south',
 )
 
 LOCAL_APPS = (
