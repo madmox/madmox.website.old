@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = get_env_var('DJANGO_SECRET_KEY', required=False, default='')
 DEBUG = (get_env_var('DJANGO_DEBUG', required=False) != None)
 TEMPLATE_DEBUG = True
-ALLOWED_HOSTS = get_env_var('DJANGO_ALLOWED_HOSTS').split()
+ALLOWED_HOSTS = get_env_var('DJANGO_ALLOWED_HOSTS').splitlines()
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = '/'
@@ -29,7 +29,8 @@ RUNNING_DEVSERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
 
 # Emailing
 
-ADMINS = tuple(get_env_var('DJANGO_ADMINS', required=False, default='').split())
+_admins = get_env_var('DJANGO_ADMINS', required=False, default='').splitlines()
+ADMINS = tuple(tuple(x.split('|')) for x in _admins)
 EMAIL_HOST = get_env_var('DJANGO_EMAIL_HOST', required=False, default='localhost')
 EMAIL_PORT = int(get_env_var('DJANGO_EMAIL_PORT', required=False, default='25'))
 EMAIL_HOST_USER = get_env_var('DJANGO_EMAIL_HOST_USER', required=False, default='')
