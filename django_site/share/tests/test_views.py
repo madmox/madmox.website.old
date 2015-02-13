@@ -4,15 +4,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-import os
+import os.path
+import posixpath
 from unittest import mock
 
 from share.utils import (
-    get_physical_path,
     FileSystemNode,
-    get_file_infos,
-    DoesNotExist,
-    IsNotFile
+    get_physical_path
 )
 from share.settings import SHARE_ROOT
 
@@ -22,29 +20,29 @@ class BaseTestCase(TestCase):
     def setUp(self):
         """Creates the test directory structure in the shared dir"""
         # Creates a directory
-        self.dirname = os.path.join(SHARE_ROOT, 'test_dir')
+        self.dirname = posixpath.join(SHARE_ROOT, 'test_dir')
         if not os.path.exists(self.dirname):
             os.makedirs(self.dirname)
             
         # Creates a file
-        self.fname = os.path.join(self.dirname, 'test_file')
+        self.fname = posixpath.join(self.dirname, 'test_file')
         if not os.path.exists(self.fname):
             with open(self.fname, 'w') as f:
                 f.write('test content')
             
         # Creates an accentuated directory
-        self.dirname_accent = os.path.join(SHARE_ROOT, 'test_dir_é')
+        self.dirname_accent = posixpath.join(SHARE_ROOT, 'test_dir_é')
         if not os.path.exists(self.dirname_accent):
             os.makedirs(self.dirname_accent)
         
         # Creates an accentuated file in the accentuated dir
-        self.fname_accent = os.path.join(self.dirname_accent, 'test_file_é')
+        self.fname_accent = posixpath.join(self.dirname_accent, 'test_file_é')
         if not os.path.exists(self.fname_accent):
             with open(self.fname_accent, 'w') as f:
                 f.write('test content')
             
         # Creates an empty directory
-        self.dirname_empty = os.path.join(SHARE_ROOT, 'test_dir_empty')
+        self.dirname_empty = posixpath.join(SHARE_ROOT, 'test_dir_empty')
         if not os.path.exists(self.dirname_empty):
             os.makedirs(self.dirname_empty)
         
@@ -62,42 +60,36 @@ class UtilsTests(BaseTestCase):
     def test_share_helpers_get_physical_path_invalid(self):
         """Asserts an invalid path is correctly detected by the method"""
         
-        path, isdir, isfile = get_physical_path('invalid_path')
-        self.assertIsNone(path)
-        self.assertIsNone(isdir)
-        self.assertIsNone(isfile)
-
-    def test_share_helpers_get_physical_path_dir_accent(self):
-        """Asserts a valid dir path is correctly detected by the method"""
-        
-        path, isdir, isfile = get_physical_path('test_dir')
-        self.assertTrue(path)
-        self.assertTrue(isdir)
-        self.assertFalse(isfile)
-
+        filepath = get_physical_path('invalid/path/')
+        self.assertIsNone(filepath)
+    
     def test_share_helpers_get_physical_path_dir(self):
-        """Asserts an accentuated dir path is correctly detected by the
-        method"""
+        """Asserts a valid dir path is correctly formatted by the method"""
         
-        path, isdir, isfile = get_physical_path('test_dir_é')
-        self.assertTrue(path)
-        self.assertTrue(isdir)
-        self.assertFalse(isfile)
+        filepath = get_physical_path('test_dir')
+        expected_path = posixpath.normpath(
+            posixpath.join(SHARE_ROOT, 'test_dir')
+        )
+        self.assertEqual(filepath, expected_path)
+
+    def test_share_helpers_get_physical_path_dir_trailing_slash(self):
+        """Asserts a valid dir path with a trailing slash is correctly
+        formatted by the method"""
+        
+        filepath = get_physical_path('test_dir/')
+        expected_path = posixpath.normpath(
+            posixpath.join(SHARE_ROOT, 'test_dir')
+        )
+        self.assertEqual(filepath, expected_path)
 
     def test_share_helpers_get_physical_path_file(self):
-        """Asserts an valid file path is correctly detected by the method"""
+        """Asserts an valid file path is correctly formatted by the method"""
         
-        path, isdir, isfile = get_physical_path('test_dir/test_file')
-        self.assertTrue(os.path.exists(path))
-        self.assertFalse(isdir)
-        self.assertTrue(isfile)
-    
-    def test_share_helpers_filesystemnode_does_not_exist(self):
-        """Checks FileSystemNode() raises an error if the given path
-        does not exist"""
-        
-        with self.assertRaises(DoesNotExist):
-            node = FileSystemNode('/wrong_path/')
+        filepath = get_physical_path('test_dir/test_file')
+        expected_path = posixpath.normpath(
+            posixpath.join(SHARE_ROOT, 'test_dir/test_file')
+        )
+        self.assertEqual(filepath, expected_path)
     
     def test_share_helpers_filesystemnode_no_children(self):
         """Checks FileSystemNode() returns an empty node if the given path
@@ -136,40 +128,15 @@ class UtilsTests(BaseTestCase):
         self.assertFalse(subnode.isdir)
         self.assertTrue(subnode.isfile)
         self.assertEqual(subnode.children, [])
-        
-    def test_share_helpers_get_file_infos_does_not_exist(self):
-        """Checks get_file_infos raises an error if the given path does not
-        match a valid file"""
-        
-        with self.assertRaises(DoesNotExist):
-            file_name, file_size, mime_type = get_file_infos('/wrong_path/')
     
-    def test_share_helpers_get_file_infos_is_a_directory(self):
-        """Checks get_file_infos raises an error if the given path matches
-        a valid directory"""
+    def test_share_helpers_filesystemnode_file(self):
+        """Checks FileSystemNode() returns an empty file node if the given
+        path matches a valid file"""
         
-        with self.assertRaises(IsNotFile):
-            file_name, file_size, mime_type = get_file_infos(self.dirname)
-    
-    def test_share_helpers_get_file_infos_valid_text_file(self):
-        """Checks get_file_infos returns correct informations and does not
-        raise any errors if the given path matches a valid file"""
-        
-        file_name, file_size, mime_type = get_file_infos(self.fname)
-        self.assertEqual(file_name, 'test_file')
-        self.assertGreater(file_size, 0)
-        self.assertIsNotNone(mime_type)
-        self.assertNotEqual(mime_type, '')
-    
-    def test_share_helpers_get_file_infos_accentuated_file(self):
-        """Checks get_file_infos returns correct informations and does not
-        raise any errors if the given path matches a valid accentuated file"""
-        
-        file_name, file_size, mime_type = get_file_infos(self.fname_accent)
-        self.assertEqual(file_name, 'test_file_é')
-        self.assertGreater(file_size, 0)
-        self.assertIsNotNone(mime_type)
-        self.assertNotEqual(mime_type, '')
+        node = FileSystemNode(self.fname)
+        self.assertFalse(node.isdir)
+        self.assertTrue(node.isfile)
+        self.assertEqual(node.children, [])
 
 
 class ViewsTests(BaseTestCase):
@@ -219,7 +186,7 @@ class ViewsTests(BaseTestCase):
         )
         
     def test_share_views_browse_unauthorized_user(self):
-        """User has not the permission for browsing, the response must not
+        """User is not authorized, the response must not
         contain the share directory"""
         
         self.create_unauthorized_user()
@@ -236,23 +203,6 @@ class ViewsTests(BaseTestCase):
         self.assertIsNone(cur_dir)
         self.assertFalse(authorized)
         
-    def test_share_views_browse_login(self):
-        """Tests the authorized user has access to the page"""
-        
-        self.create_authorized_user()
-        self.assertTrue(
-            self.client.login(username='unittest1', password='unittest1')
-        )
-        
-        response = self.client.get(
-            reverse('share:browse', args=('',))
-        )
-        self.assertEqual(response.status_code, 200)
-        cur_dir = response.context['current_directory']
-        authorized = response.context['authorized']
-        self.assertIsNotNone(cur_dir)
-        self.assertTrue(authorized)
-    
     def test_share_views_browse_invalid_path(self):
         """Path is invalid, the response must be an HTTP 404 code"""
         
@@ -278,8 +228,50 @@ class ViewsTests(BaseTestCase):
         response = self.client.get(
             reverse('share:browse', args=('test_dir/',))
         )
-            
+        
         self.assertEqual(response.status_code, 200)
+        
+        cur_dir = response.context['current_directory']
+        self.assertIsNotNone(cur_dir)
+        self.assertEqual(cur_dir.name, 'test_dir')
+        self.assertEqual(cur_dir.url, 'test_dir/')
+    
+    def test_share_views_browse_root(self):
+        """Path is the root directory, the response must be an HTML page
+        containing sub directories and file infos"""
+        
+        self.create_authorized_user()
+        self.assertTrue(
+            self.client.login(username='unittest1', password='unittest1')
+        )
+        
+        response = self.client.get(
+            reverse('share:browse', args=('',))
+        )
+        self.assertEqual(response.status_code, 200)
+        
+        cur_dir = response.context['current_directory']
+        self.assertIsNotNone(cur_dir)
+        self.assertTrue(cur_dir.isroot)
+        self.assertEqual(cur_dir.name, 'share')
+        self.assertEqual(cur_dir.url, '')
+
+    def test_share_views_browse_valid_dir_redirect(self):
+        """Path is a valid dir, the response must be an HTML page containing
+        sub directories and file infos"""
+        
+        self.create_authorized_user()
+        self.assertTrue(
+            self.client.login(username='unittest1', password='unittest1')
+        )
+        
+        response = self.client.get(
+            reverse('share:browse', args=('test_dir',)),
+            follow=True
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.redirect_chain)
         
         cur_dir = response.context['current_directory']
         self.assertIsNotNone(cur_dir)
@@ -319,5 +311,5 @@ class ViewsTests(BaseTestCase):
             reverse('share:browse', args=('test_dir/test_file',))
         )
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(response['Content-Type'].lower().startswith('text/html'))
+        self.assertIsNotNone(response['Content-Type'])
         self.assertEqual(response['X-SendFile'], self.fname)

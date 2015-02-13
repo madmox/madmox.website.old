@@ -19,8 +19,8 @@ def set_share_navigation(context, current_path):
     """
     results = []
     
-    path, isdir, isfile = get_physical_path('')
-    node = FileSystemNode(path)
+    filepath = get_physical_path('')
+    node = FileSystemNode(filepath)
     
     for child in node.children:
         url = reverse('share:browse', args=(child.url,))
