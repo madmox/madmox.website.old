@@ -8,7 +8,7 @@
 {% block content %}
     {% if authorized %}
         <div class="share-authorized">
-            <h1>{{ current_directory.local_path }}</h1>
+            <h1>{{ current_directory.display_path }}</h1>
             <ul>
                 {% if not current_directory.isroot %}
                     <li class="share-directory"><a href="{% url 'share:browse' current_directory.parent_url %}">..</a></li>
