@@ -1,6 +1,11 @@
 from django.core.servers.basehttp import FileWrapper
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+    HttpResponsePermanentRedirect,
+    Http404
+)
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
 
@@ -26,7 +31,8 @@ def browse(request, path):
         if node.isdir:
             # Path is a directory: display child nodes
             if (node.url != path):
-                return HttpResponseRedirect(node.url)
+                url = reverse('share:browse', args=(node.url,))
+                return HttpResponsePermanentRedirect(url)
             else:
                 return render(
                     request,
