@@ -3,6 +3,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils.http import urlquote
 
 import os.path
 import posixpath
@@ -312,4 +313,22 @@ class ViewsTests(BaseTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(response['Content-Type'])
-        self.assertEqual(response['X-SendFile'], self.fname)
+        self.assertFalse(response['Content-Type'].startswith('text/html'))
+        self.assertEqual(response['X-SendFile'], urlquote(self.fname))
+
+    def test_share_views_browse_valid_file_accent(self):
+        """Path is a valid file, the response must be an HTTP response with
+        the file's MIME type and content"""
+        
+        self.create_authorized_user()
+        self.assertTrue(
+            self.client.login(username='unittest1', password='unittest1')
+        )
+        
+        response = self.client.get(
+            reverse('share:browse', args=('test_dir_é/test_file_é',))
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response['Content-Type'])
+        self.assertFalse(response['Content-Type'].startswith('text/html'))
+        self.assertEqual(response['X-SendFile'], urlquote(self.fname_accent))
