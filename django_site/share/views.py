@@ -7,6 +7,7 @@ from django.http import (
     Http404
 )
 from django.shortcuts import render
+from django.utils.http import urlquote
 from django.views.decorators.cache import cache_control
 
 from madmox_website import settings
@@ -52,9 +53,9 @@ def browse(request, path):
                 # Apache mod-xsendfile intercepts the X-SendFile header and
                 # processes the upload itself
                 response = HttpResponse(content_type=node.mime_type)
-                response['X-SendFile'] = filepath
+                response['X-SendFile'] = urlquote(filepath)
             response['Content-Disposition'] = (
-                'attachment; filename={0}'
+                'attachment; filename="{0}"'
             ).format(node.name)
             
             # Dev: let the garbage collector close the file,

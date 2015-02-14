@@ -75,9 +75,12 @@ class FileSystemNode:
 
     def get_mime_type(self):
         if 'magic' in sys.modules:
-            return magic.from_file(self.path, mime=True).decode('utf-8')
+            mimetype = magic.from_file(self.path, mime=True).decode('utf-8')
         else:
-            return mimetypes.guess_type(self.path)[0]
+            mimetype, encoding = mimetypes.guess_type(self.path)
+        if not mimetype:
+            mimetype = 'application/octet-stream'
+        return mimetype
         
     def get_children(self):
         child_dirs, child_files = [], []
