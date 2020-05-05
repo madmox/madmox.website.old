@@ -1,3 +1,2 @@
-syntax: glob
 *.pyc
 django_site/envdir/DJANGO_*
