@@ -19,9 +19,4 @@ def set_about_navigation(current_path):
     active = (urllib.parse.unquote(current_path) == urllib.parse.unquote(url))
     results.append(NavigationNode(active, url, label))
     
-    url = reverse('about:cv')
-    label = 'Mon C.V.'
-    active = (current_path == url)
-    results.append(NavigationNode(active, url, label))
-    
     return results

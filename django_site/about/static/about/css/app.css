@@ -4,24 +4,3 @@
 h1 { color: rgb(100, 100, 255); border-bottom: 1px solid rgb(100, 100, 255); }
 
 /** index styles **/
-
-/** cv styles **/
-h1.about-cv-title { text-transform: uppercase; font-size: 1.8em; }
-
-#about-cv-contact { width: 100%; position: relative; }
-#about-cv-contact-primary { display: inline-block; vertical-align: top; }
-#about-cv-contact-secondary { display: inline-block; position: absolute; right: 0; vertical-align: top; text-align: right; }
-#about-cv-profile-photo { margin-right: 0.5em; }
-
-.about-cv-job, .about-cv-formation { position: relative; }
-.about-cv-job-name, .about-cv-formation-name { margin-bottom: 0; }
-.about-cv-job-period, .about-cv-job-location, .about-cv-formation-period, .about-cv-formation-location { display: inline-block; font-style: italic; color: #AAAAAA; }
-.about-cv-job-location:before, .about-cv-formation-location:before { content: " | " }
-.about-cv-job-logo, .about-cv-formation-logo { position: absolute; top: 1em; right: 1em; }
-.about-cv-job-description, .about-cv-formation-description { text-align: justify; }
-
-.about-cv-skills ul, .about-cv-hobbies ul { margin: 0; padding-left: 1em; }
-.about-cv-skills li, .about-cv-hobbies li { list-style-type: none; font-size: 0.9em; }
-.about-cv-skills-group:not(:last-child), .about-cv-hobbies-group:not(:last-child) { padding-bottom: 1em; }
-
-#about-cv-references { text-transform: uppercase; font-weight: bold; font-size: 1.2em; margin-top: 1em; }
