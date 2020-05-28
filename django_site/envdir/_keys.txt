@@ -6,6 +6,7 @@ DJANGO_ALLOWED_HOSTS (space/carriage return separated list)
 DJANGO_DATABASE_NAME
 DJANGO_MEDIA_ROOT
 DJANGO_AES_KEY
+DJANGO_SHARE_ROOT
 
 # Defines environment keys optional in this django install
 
