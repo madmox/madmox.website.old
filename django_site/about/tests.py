@@ -13,15 +13,6 @@ class AboutIndexTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class AboutCvTests(TestCase):
-    def test_cv_view(self):
-        """
-        Tests the view returns a 200 HTTP code
-        """
-        response = self.client.get(reverse('about:cv'))
-        self.assertEqual(response.status_code, 200)
-
-
 class AboutNavigationTests(TestCase):
     def test_navigation_list(self):
         nav = set_about_navigation(reverse('about:index'))
